@@ -21,6 +21,9 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1;
 }
 
 a {
