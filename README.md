@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 0 / Stage 1 foundation**
+Current stage: **Stage 2 public site structure**
 
-The first milestone is a polished public website prototype before adding backend, admin, payments, or customer accounts.
+The current milestone is a polished public website structure before adding backend, admin, payments, or customer accounts.
 
 ## Tech Stack
 
@@ -47,4 +47,3 @@ Front Yard Famous should feel modern, joyful, polished, and uncluttered. The web
 - Manual availability confirmation.
 - Admin login only when booking/inventory management becomes useful.
 - No customer login until repeat bookings, payment history, or customer self-service justify it.
-
