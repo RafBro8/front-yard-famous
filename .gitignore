@@ -20,4 +20,4 @@ Thumbs.db
 
 # Local caches
 .npm-cache/
-
+.vite-cache/
