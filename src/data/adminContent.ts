@@ -1,0 +1,106 @@
+import type { AdminBookingRequest, AdminMetric, BlackoutDate } from '../types/business';
+
+export const adminMetrics: AdminMetric[] = [
+  {
+    label: 'New requests',
+    value: '3',
+    detail: 'Need date, route, and inventory review',
+  },
+  {
+    label: 'Confirmed',
+    value: '5',
+    detail: 'Upcoming setups across the next 14 days',
+  },
+  {
+    label: 'Inventory flags',
+    value: '4',
+    detail: 'Priority pieces to buy or restock first',
+  },
+  {
+    label: 'Unavailable',
+    value: '2',
+    detail: 'Blackout dates currently blocked',
+  },
+];
+
+export const adminBookingRequests: AdminBookingRequest[] = [
+  {
+    id: 'FYF-1024',
+    status: 'new',
+    customerName: 'Jordan Miller',
+    contact: 'jordan@example.com',
+    occasion: 'Birthday',
+    eventDate: '2026-09-12',
+    setupWindow: 'Evening before',
+    serviceArea: 'West Loop',
+    displayMessage: 'Happy 30th Jordan',
+    packageId: 'milestone-display',
+    estimateLabel: '$125+',
+    submittedAt: '2026-08-27',
+    inventoryNeeds: ['Oversized numbers', 'Modern letters', 'Birthday icons'],
+    routeNotes: 'Confirm address access and preferred lawn placement.',
+  },
+  {
+    id: 'FYF-1023',
+    status: 'reviewing',
+    customerName: 'Avery Chen',
+    contact: 'avery@example.com',
+    occasion: 'New baby',
+    eventDate: '2026-09-18',
+    setupWindow: 'Morning of event',
+    serviceArea: 'Oak Park',
+    displayMessage: 'Welcome Home Baby Noah',
+    packageId: 'baby-welcome',
+    estimateLabel: '$145+',
+    submittedAt: '2026-08-26',
+    inventoryNeeds: ['Stork kit', 'Baby icons', 'Soft fillers'],
+    routeNotes: 'Check driveway visibility and pickup timing after family photos.',
+  },
+  {
+    id: 'FYF-1022',
+    status: 'confirmed',
+    customerName: 'Morgan Davis',
+    contact: 'morgan@example.com',
+    occasion: 'Graduation',
+    eventDate: '2026-09-21',
+    setupWindow: 'Afternoon of event',
+    serviceArea: 'Naperville',
+    displayMessage: 'Congrats Ava Class of 2027',
+    packageId: 'milestone-display',
+    estimateLabel: '$125+',
+    submittedAt: '2026-08-24',
+    inventoryNeeds: ['Class year numbers', 'Graduation icons', 'School colors'],
+    routeNotes: 'Confirmed school colors. Hold extra stakes for corner lot.',
+  },
+  {
+    id: 'FYF-1021',
+    status: 'completed',
+    customerName: 'Sam Rivera',
+    contact: 'sam@example.com',
+    occasion: 'Retirement',
+    eventDate: '2026-08-22',
+    setupWindow: 'Morning of event',
+    serviceArea: 'Elmhurst',
+    displayMessage: 'Happy Retirement Sam',
+    packageId: 'classic-greeting',
+    estimateLabel: '$95+',
+    submittedAt: '2026-08-12',
+    inventoryNeeds: ['Modern letters', 'Premium fillers'],
+    routeNotes: 'Pickup completed. Good photo candidate for future gallery.',
+  },
+];
+
+export const blackoutDates: BlackoutDate[] = [
+  {
+    id: 'labor-day-weekend',
+    date: '2026-09-06',
+    label: 'Labor Day weekend',
+    reason: 'Keep closed until setup capacity is known.',
+  },
+  {
+    id: 'inventory-day',
+    date: '2026-09-26',
+    label: 'Inventory reset',
+    reason: 'Reserve time for cleaning, repairs, and photo updates.',
+  },
+];

@@ -12,9 +12,18 @@ import {
   packages,
   setupWindows,
 } from './data/siteContent';
+import { AdminDashboard } from './pages/AdminDashboard';
 import type { BookingErrors, BookingFormState } from './types/business';
 
 function App() {
+  if (window.location.pathname.startsWith('/admin')) {
+    return <AdminDashboard />;
+  }
+
+  return <PublicSite />;
+}
+
+function PublicSite() {
   const [bookingForm, setBookingForm] = useState(initialBookingForm);
   const [errors, setErrors] = useState<BookingErrors>({});
   const [submittedRequest, setSubmittedRequest] = useState<BookingFormState | null>(null);

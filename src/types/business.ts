@@ -17,6 +17,8 @@ export type InventoryCategory =
 
 export type InventoryStatus = 'planned' | 'priority' | 'owned';
 
+export type BookingStatus = 'new' | 'reviewing' | 'confirmed' | 'declined' | 'completed';
+
 export type NavItem = {
   label: string;
   href: string;
@@ -92,3 +94,33 @@ export type BookingFormState = {
 };
 
 export type BookingErrors = Partial<Record<keyof BookingFormState, string>>;
+
+export type AdminMetric = {
+  label: string;
+  value: string;
+  detail: string;
+};
+
+export type AdminBookingRequest = {
+  id: string;
+  status: BookingStatus;
+  customerName: string;
+  contact: string;
+  occasion: string;
+  eventDate: string;
+  setupWindow: string;
+  serviceArea: string;
+  displayMessage: string;
+  packageId: string;
+  estimateLabel: string;
+  submittedAt: string;
+  inventoryNeeds: string[];
+  routeNotes: string;
+};
+
+export type BlackoutDate = {
+  id: string;
+  date: string;
+  label: string;
+  reason: string;
+};

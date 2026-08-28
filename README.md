@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 4 inventory and pricing model**
+Current stage: **Stage 5 admin area**
 
-The current milestone is a frontend data model for occasions, packages, add-ons, inventory, availability rules, and booking request shape before adding backend, admin, payments, or customer accounts.
+The current milestone is a frontend-only private admin preview for booking review, inventory priorities, package planning, and blackout dates before adding real auth, backend persistence, payments, or customer accounts.
 
 ## Tech Stack
 
@@ -36,6 +36,13 @@ Lint check:
 npm run lint
 ```
 
+Admin preview:
+
+```bash
+npm run dev
+# open http://localhost:5173/admin
+```
+
 ## Product Direction
 
 Front Yard Famous should feel modern, joyful, polished, and uncluttered. The website should avoid the crammed one-page style common in local yard sign businesses and instead make booking, pricing, gallery browsing, and occasion discovery easy to scan.
@@ -48,6 +55,10 @@ The current site content lives in typed frontend data files:
 - `src/data/siteContent.ts` stores occasions, packages, add-ons, inventory examples, availability rules, FAQs, and booking defaults.
 
 These frontend models are intentionally shaped so they can later map to MongoDB documents or API responses without redesigning the whole site.
+
+## Admin Direction
+
+Stage 5 adds a separate `/admin` view with mock booking requests, statuses, inventory priorities, package controls, and blackout dates. It is intentionally frontend-only so the user-facing site can stay polished while the operational workflow is designed before backend and authentication decisions.
 
 ## Version 1 Recommendation
 

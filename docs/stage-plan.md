@@ -88,6 +88,15 @@ Commit checkpoint:
 
 Goal: private management for bookings, inventory, pricing, and blackout dates.
 
+Build:
+- Separate `/admin` view that keeps customer pages clean.
+- Booking request queue with statuses: New, Reviewing, Confirmed, Declined, and Completed.
+- Admin metrics for new requests, confirmed bookings, inventory flags, and blackout dates.
+- Inventory priority panel using the shared business data model.
+- Package/pricing management preview.
+- Blackout date planning panel for unavailable dates.
+- Frontend-only structure that can later connect to auth, MongoDB, and API routes.
+
 Commit checkpoint:
 - `feat: add admin booking management`
 
