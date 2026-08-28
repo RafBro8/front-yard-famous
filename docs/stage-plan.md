@@ -73,6 +73,14 @@ Commit checkpoint:
 
 Goal: organize products, packages, add-ons, gallery items, and availability.
 
+Build:
+- Shared TypeScript business models.
+- Structured frontend data files for public content.
+- Package tiers with starting prices, included items, best-fit occasions, and upgrade options.
+- Add-on options focused on yard signs and setup pieces.
+- Inventory examples for letters, numbers, storks, graduation pieces, fillers, and setup hardware.
+- Availability rules that support manual confirmation now and backend scheduling later.
+
 Commit checkpoint:
 - `feat: model packages and inventory data`
 

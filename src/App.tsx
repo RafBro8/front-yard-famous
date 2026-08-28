@@ -1,134 +1,18 @@
 import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
-
-type BookingFormState = {
-  name: string;
-  email: string;
-  phone: string;
-  occasion: string;
-  eventDate: string;
-  setupWindow: string;
-  serviceArea: string;
-  honoreeName: string;
-  displayMessage: string;
-  themeNotes: string;
-};
-
-type BookingErrors = Partial<Record<keyof BookingFormState, string>>;
-
-const initialBookingForm: BookingFormState = {
-  name: '',
-  email: '',
-  phone: '',
-  occasion: 'Birthdays',
-  eventDate: '',
-  setupWindow: '',
-  serviceArea: '',
-  honoreeName: '',
-  displayMessage: '',
-  themeNotes: '',
-};
-
-const navItems = [
-  ['Occasions', '#occasions'],
-  ['Gallery', '#gallery'],
-  ['Pricing', '#pricing'],
-  ['Booking', '#booking'],
-  ['FAQ', '#faq'],
-];
-
-const occasions = [
-  {
-    name: 'Birthdays',
-    description: 'Names, ages, favorite colors, themed accents, and big milestone numbers.',
-  },
-  {
-    name: 'New baby',
-    description: 'Storks, soft palettes, welcome-home announcements, and sibling notes.',
-  },
-  {
-    name: 'Graduation',
-    description: 'School colors, class years, activities, sports, and senior sendoffs.',
-  },
-  {
-    name: 'Anniversary',
-    description: 'Elegant displays for big years, vow renewals, and surprise celebrations.',
-  },
-  {
-    name: 'Retirement',
-    description: 'Career nods, hobbies, farewell messages, and polished sendoff styling.',
-  },
-  {
-    name: 'Custom',
-    description: 'Welcome home, team wins, holidays, first days, and just-because moments.',
-  },
-];
-
-const galleryItems = [
-  ['Birthday statement', 'Large greeting letters, name, age, and themed icons.'],
-  ['Milestone numbers', 'Oversized numbers styled with stars, icons, and premium fillers.'],
-  ['Baby welcome', 'Stork display, birth detail panel, and soft decorative pieces.'],
-  ['Graduation yard', 'School-color setup with class year, name, and achievement accents.'],
-];
-
-const packages = [
-  {
-    name: 'Classic Greeting',
-    price: 'from $95',
-    description: 'A clean name-and-message display for birthdays and everyday celebrations.',
-    includes: ['Up to 24-hour rental', 'Standard letters and fillers', 'Setup and pickup'],
-  },
-  {
-    name: 'Milestone Display',
-    price: 'from $125',
-    description: 'A larger display with premium visual impact for big birthdays and graduations.',
-    includes: ['Large numbers or class year', 'Expanded color story', 'Extra accent pieces'],
-  },
-  {
-    name: 'Baby Welcome',
-    price: 'from $145',
-    description: 'A sweet new-baby setup with stork or announcement styling.',
-    includes: ['Stork or baby theme', 'Custom name/details', 'Soft coordinating fillers'],
-  },
-];
-
-const addOns = ['Extra name line', 'Oversized numbers', 'Theme icons', 'Premium filler signs'];
-
-const faqs = [
-  {
-    question: 'Do customers need an account?',
-    answer:
-      'Not for the first version. A simple request form keeps booking easy while you confirm availability manually.',
-  },
-  {
-    question: 'When is the display installed?',
-    answer:
-      'Most setups can be installed the evening before or morning of the celebration, depending on route and availability.',
-  },
-  {
-    question: 'What happens after a request is submitted?',
-    answer:
-      'You review the date, address, occasion, inventory needs, and setup timing before confirming the booking.',
-  },
-  {
-    question: 'Can customers request custom themes?',
-    answer:
-      'Yes. The form collects colors, themes, names, and notes so custom ideas can be reviewed before confirmation.',
-  },
-];
-
-const setupWindows = [
-  'Evening before',
-  'Morning of event',
-  'Afternoon of event',
-  'Flexible',
-];
-
-const bookingSteps = [
-  'Customer submits the request',
-  'You check date, route, and inventory',
-  'You confirm the setup details',
-  'Payment can be added later',
-];
+import {
+  addOns,
+  availabilityRules,
+  bookingSteps,
+  faqs,
+  galleryItems,
+  heroImage,
+  initialBookingForm,
+  navItems,
+  occasions,
+  packages,
+  setupWindows,
+} from './data/siteContent';
+import type { BookingErrors, BookingFormState } from './types/business';
 
 function App() {
   const [bookingForm, setBookingForm] = useState(initialBookingForm);
@@ -205,9 +89,9 @@ function Header() {
           Front Yard Famous
         </a>
         <nav aria-label="Main navigation" className="hidden items-center gap-7 text-sm font-semibold lg:flex">
-          {navItems.map(([label, href]) => (
-            <a key={href} className="transition hover:text-lawn" href={href}>
-              {label}
+          {navItems.map((item) => (
+            <a key={item.href} className="transition hover:text-lawn" href={item.href}>
+              {item.label}
             </a>
           ))}
         </nav>
@@ -253,11 +137,7 @@ function Hero() {
       </div>
 
       <figure className="border border-ink/10 bg-white p-3 shadow-soft">
-        <img
-          alt="Premium happy birthday yard display with large letters, milestone numbers, and graphic accents"
-          className="aspect-[4/3] w-full object-cover"
-          src="/images/hero-birthday-display.png"
-        />
+        <img alt={heroImage.alt} className="aspect-[4/3] w-full object-cover" src={heroImage.src} />
       </figure>
     </section>
   );
@@ -274,7 +154,7 @@ function OccasionsSection() {
         />
         <div className="mt-10 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 md:grid-cols-2 lg:grid-cols-3">
           {occasions.map((occasion) => (
-            <article key={occasion.name} className="bg-white p-6">
+            <article key={occasion.slug} className="bg-white p-6">
               <h3 className="font-display text-2xl font-semibold text-forest">
                 {occasion.name}
               </h3>
@@ -305,15 +185,15 @@ function GallerySection() {
           <img
             alt="Birthday yard display concept in front of a home"
             className="mt-8 aspect-[5/3] w-full border border-ink/10 object-cover"
-            src="/images/hero-birthday-display.png"
+            src={heroImage.src}
           />
         </div>
         <div className="grid gap-px overflow-hidden border border-ink/10 bg-ink/10 sm:grid-cols-2">
-          {galleryItems.map(([title, text]) => (
-            <article key={title} className="bg-white p-6">
+          {galleryItems.map((item) => (
+            <article key={item.title} className="bg-white p-6">
               <div className="mb-7 h-2 w-14 bg-coral" />
-              <h3 className="font-display text-2xl font-semibold text-forest">{title}</h3>
-              <p className="mt-3 text-sm leading-6 text-ink/65">{text}</p>
+              <h3 className="font-display text-2xl font-semibold text-forest">{item.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-ink/65">{item.description}</p>
             </article>
           ))}
         </div>
@@ -334,9 +214,9 @@ function PricingSection() {
         />
         <div className="mt-10 grid gap-px overflow-hidden border border-white/14 bg-white/14 lg:grid-cols-3">
           {packages.map((item) => (
-            <article key={item.name} className="bg-forest p-6">
+            <article key={item.id} className="bg-forest p-6">
               <h3 className="font-display text-2xl font-semibold">{item.name}</h3>
-              <p className="mt-5 text-xl font-semibold text-butter">{item.price}</p>
+              <p className="mt-5 text-xl font-semibold text-butter">{item.priceLabel}</p>
               <p className="mt-4 text-sm leading-6 text-white/70">{item.description}</p>
               <ul className="mt-6 space-y-3 text-sm text-white/82">
                 {item.includes.map((included) => (
@@ -348,8 +228,8 @@ function PricingSection() {
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           {addOns.map((addOn) => (
-            <span key={addOn} className="border border-white/18 px-4 py-2 text-sm text-white/82">
-              {addOn}
+            <span key={addOn.id} className="border border-white/18 px-4 py-2 text-sm text-white/82">
+              {addOn.name}
             </span>
           ))}
         </div>
@@ -399,10 +279,14 @@ function BookingSection({
               </li>
             ))}
           </ol>
-          <p className="mt-6 text-sm leading-6 text-ink/58">
-            This form currently drafts the request in the browser only. Stage 4 or 6 can
-            connect it to email, an API, or a database.
-          </p>
+          <div className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
+            {availabilityRules.slice(0, 3).map((rule) => (
+              <div key={rule.id} className="py-4">
+                <p className="text-sm font-semibold text-forest">{rule.label}</p>
+                <p className="mt-1 text-sm leading-6 text-ink/58">{rule.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="border border-ink/10 bg-white p-6 sm:p-8">
