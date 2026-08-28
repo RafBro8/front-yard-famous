@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 2 public site structure**
+Current stage: **Stage 3 booking inquiry flow**
 
-The current milestone is a polished public website structure before adding backend, admin, payments, or customer accounts.
+The current milestone is a frontend booking request flow with validation and a clear manual-confirmation experience before adding backend, admin, payments, or customer accounts.
 
 ## Tech Stack
 

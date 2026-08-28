@@ -135,3 +135,19 @@ Recommendation:
 Commit checkpoint:
 - `feat: add payment workflow`
 
+## Stage 10: Yard Display Builder
+
+Goal: let customers experiment with available inventory and submit a visual display concept.
+
+Build:
+- Browse available sign pieces, numbers, icons, and theme fillers.
+- Drag and arrange pieces on a yard-style canvas.
+- Save the layout as structured JSON.
+- Export a visual preview for the customer and admin.
+- Attach the preview to a booking request.
+
+Recommendation:
+- Treat this as a later differentiator after real inventory, pricing rules, and booking operations are proven.
+
+Commit checkpoint:
+- `feat: add yard display builder`

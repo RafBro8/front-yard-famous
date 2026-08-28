@@ -1,4 +1,32 @@
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+
+type BookingFormState = {
+  name: string;
+  email: string;
+  phone: string;
+  occasion: string;
+  eventDate: string;
+  setupWindow: string;
+  serviceArea: string;
+  honoreeName: string;
+  displayMessage: string;
+  themeNotes: string;
+};
+
+type BookingErrors = Partial<Record<keyof BookingFormState, string>>;
+
+const initialBookingForm: BookingFormState = {
+  name: '',
+  email: '',
+  phone: '',
+  occasion: 'Birthdays',
+  eventDate: '',
+  setupWindow: '',
+  serviceArea: '',
+  honoreeName: '',
+  displayMessage: '',
+  themeNotes: '',
+};
 
 const navItems = [
   ['Occasions', '#occasions'],
@@ -88,6 +116,13 @@ const faqs = [
   },
 ];
 
+const setupWindows = [
+  'Evening before',
+  'Morning of event',
+  'Afternoon of event',
+  'Flexible',
+];
+
 const bookingSteps = [
   'Customer submits the request',
   'You check date, route, and inventory',
@@ -96,11 +131,47 @@ const bookingSteps = [
 ];
 
 function App() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [bookingForm, setBookingForm] = useState(initialBookingForm);
+  const [errors, setErrors] = useState<BookingErrors>({});
+  const [submittedRequest, setSubmittedRequest] = useState<BookingFormState | null>(null);
+  const today = useMemo(getTodayInputValue, []);
+
+  function updateBookingField(
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) {
+    const { name, value } = event.target;
+
+    setBookingForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+
+    if (errors[name as keyof BookingFormState]) {
+      setErrors((current) => ({
+        ...current,
+        [name]: undefined,
+      }));
+    }
+  }
 
   function handleBookingSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitted(true);
+
+    const nextErrors = validateBookingForm(bookingForm, today);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setSubmittedRequest(null);
+      return;
+    }
+
+    setSubmittedRequest(bookingForm);
+  }
+
+  function resetBookingForm() {
+    setBookingForm(initialBookingForm);
+    setErrors({});
+    setSubmittedRequest(null);
   }
 
   return (
@@ -110,7 +181,15 @@ function App() {
       <OccasionsSection />
       <GallerySection />
       <PricingSection />
-      <BookingSection isSubmitted={isSubmitted} onSubmit={handleBookingSubmit} />
+      <BookingSection
+        errors={errors}
+        form={bookingForm}
+        minDate={today}
+        onChange={updateBookingField}
+        onReset={resetBookingForm}
+        onSubmit={handleBookingSubmit}
+        submittedRequest={submittedRequest}
+      />
       <FaqSection />
       <ContactSection />
       <Footer />
@@ -175,7 +254,7 @@ function Hero() {
 
       <figure className="border border-ink/10 bg-white p-3 shadow-soft">
         <img
-            alt="Premium happy birthday yard display with large letters, milestone numbers, and graphic accents"
+          alt="Premium happy birthday yard display with large letters, milestone numbers, and graphic accents"
           className="aspect-[4/3] w-full object-cover"
           src="/images/hero-birthday-display.png"
         />
@@ -280,14 +359,27 @@ function PricingSection() {
 }
 
 type BookingSectionProps = {
-  isSubmitted: boolean;
+  errors: BookingErrors;
+  form: BookingFormState;
+  minDate: string;
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  onReset: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  submittedRequest: BookingFormState | null;
 };
 
-function BookingSection({ isSubmitted, onSubmit }: BookingSectionProps) {
+function BookingSection({
+  errors,
+  form,
+  minDate,
+  onChange,
+  onReset,
+  onSubmit,
+  submittedRequest,
+}: BookingSectionProps) {
   return (
     <section id="booking" className="py-16">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.78fr_1.22fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.76fr_1.24fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
             Booking request
@@ -296,8 +388,8 @@ function BookingSection({ isSubmitted, onSubmit }: BookingSectionProps) {
             Request first, confirm manually.
           </h2>
           <p className="mt-5 leading-7 text-ink/68">
-            This v1 flow avoids customer accounts and instant checkout while still
-            giving you the important details: date, location, occasion, and style.
+            This v1 flow collects the details you need without customer accounts,
+            instant checkout, or the risk of double-booking inventory.
           </p>
           <ol className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
             {bookingSteps.map((step, index) => (
@@ -307,64 +399,207 @@ function BookingSection({ isSubmitted, onSubmit }: BookingSectionProps) {
               </li>
             ))}
           </ol>
+          <p className="mt-6 text-sm leading-6 text-ink/58">
+            This form currently drafts the request in the browser only. Stage 4 or 6 can
+            connect it to email, an API, or a database.
+          </p>
         </div>
 
-        <form className="border border-ink/10 bg-white p-6 sm:p-8" onSubmit={onSubmit}>
-          {isSubmitted ? (
-            <div className="grid min-h-96 place-items-center text-center">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
-                  Request drafted
-                </p>
-                <h3 className="mt-4 font-display text-4xl font-semibold text-forest">
-                  Booking form behavior is ready for backend wiring.
-                </h3>
-                <p className="mt-5 leading-7 text-ink/68">
-                  In Stage 3, this can submit to an API, email service, or form provider.
-                </p>
-              </div>
-            </div>
+        <div className="border border-ink/10 bg-white p-6 sm:p-8">
+          {submittedRequest ? (
+            <BookingConfirmation request={submittedRequest} onReset={onReset} />
           ) : (
-            <div className="grid gap-5">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Name" name="name" placeholder="Your name" />
-                <Field label="Phone" name="phone" placeholder="(555) 555-5555" />
-              </div>
-              <Field label="Email" name="email" placeholder="you@example.com" type="email" />
-              <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Preferred date" name="date" type="date" />
-                <label className="grid gap-2 text-sm font-semibold text-forest">
-                  Occasion
-                  <select
-                    className="h-12 border border-ink/12 bg-cream px-3 text-sm font-normal text-ink outline-none focus:border-lawn"
-                    name="occasion"
-                  >
-                    {occasions.map((occasion) => (
-                      <option key={occasion.name}>{occasion.name}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <Field label="Setup address or area" name="address" placeholder="Neighborhood or full address" />
-              <label className="grid gap-2 text-sm font-semibold text-forest">
-                Colors, theme, or notes
-                <textarea
-                  className="min-h-28 resize-y border border-ink/12 bg-cream px-3 py-3 text-sm font-normal text-ink outline-none focus:border-lawn"
-                  name="notes"
-                  placeholder="Tell us the name, age, colors, theme, and anything special."
+            <form noValidate onSubmit={onSubmit}>
+              <div className="grid gap-6">
+                <div>
+                  <h3 className="font-display text-3xl font-semibold text-forest">
+                    Tell us about the celebration.
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-ink/62">
+                    Availability is not guaranteed until the request is reviewed and
+                    confirmed.
+                  </p>
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field
+                    error={errors.name}
+                    label="Your name"
+                    name="name"
+                    onChange={onChange}
+                    placeholder="Your name"
+                    required
+                    value={form.name}
+                  />
+                  <Field
+                    error={errors.phone}
+                    label="Phone"
+                    name="phone"
+                    onChange={onChange}
+                    placeholder="(555) 555-5555"
+                    required
+                    value={form.phone}
+                  />
+                </div>
+
+                <Field
+                  error={errors.email}
+                  label="Email"
+                  name="email"
+                  onChange={onChange}
+                  placeholder="you@example.com"
+                  required
+                  type="email"
+                  value={form.email}
                 />
-              </label>
-              <button
-                className="mt-2 rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition hover:bg-forest"
-                type="submit"
-              >
-                Preview request flow
-              </button>
-            </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <SelectField
+                    error={errors.occasion}
+                    label="Occasion"
+                    name="occasion"
+                    onChange={onChange}
+                    options={occasions.map((occasion) => occasion.name)}
+                    required
+                    value={form.occasion}
+                  />
+                  <Field
+                    error={errors.honoreeName}
+                    label="Name on display"
+                    name="honoreeName"
+                    onChange={onChange}
+                    placeholder="Mia, Marcus, Class of 2027..."
+                    required
+                    value={form.honoreeName}
+                  />
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field
+                    error={errors.eventDate}
+                    label="Preferred date"
+                    min={minDate}
+                    name="eventDate"
+                    onChange={onChange}
+                    required
+                    type="date"
+                    value={form.eventDate}
+                  />
+                  <SelectField
+                    error={errors.setupWindow}
+                    label="Preferred setup window"
+                    name="setupWindow"
+                    onChange={onChange}
+                    options={setupWindows}
+                    placeholder="Choose a window"
+                    required
+                    value={form.setupWindow}
+                  />
+                </div>
+
+                <Field
+                  error={errors.serviceArea}
+                  label="Setup address or neighborhood"
+                  name="serviceArea"
+                  onChange={onChange}
+                  placeholder="Neighborhood or full address"
+                  required
+                  value={form.serviceArea}
+                />
+
+                <TextareaField
+                  error={errors.displayMessage}
+                  label="Display message"
+                  name="displayMessage"
+                  onChange={onChange}
+                  placeholder="Happy 40th Marcus, Welcome Home Baby Noah, Congrats Ava..."
+                  required
+                  value={form.displayMessage}
+                />
+
+                <TextareaField
+                  label="Colors, theme, or notes"
+                  name="themeNotes"
+                  onChange={onChange}
+                  placeholder="Favorite colors, school colors, interests, theme ideas, or anything to avoid."
+                  value={form.themeNotes}
+                />
+
+                <div className="flex flex-col gap-3 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm leading-6 text-ink/58">
+                    No payment is collected here. You will receive a confirmation before
+                    the booking is official.
+                  </p>
+                  <button
+                    className="rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition hover:bg-forest"
+                    type="submit"
+                  >
+                    Review request
+                  </button>
+                </div>
+              </div>
+            </form>
           )}
-        </form>
+        </div>
       </div>
     </section>
+  );
+}
+
+type BookingConfirmationProps = {
+  request: BookingFormState;
+  onReset: () => void;
+};
+
+function BookingConfirmation({ request, onReset }: BookingConfirmationProps) {
+  const summary = [
+    ['Occasion', request.occasion],
+    ['Display name', request.honoreeName],
+    ['Preferred date', formatDate(request.eventDate)],
+    ['Setup window', request.setupWindow],
+    ['Location', request.serviceArea],
+    ['Message', request.displayMessage],
+    ['Theme notes', request.themeNotes || 'No notes added'],
+  ];
+
+  return (
+    <div>
+      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
+        Request ready for review
+      </p>
+      <h3 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+        Thanks, {request.name}. Here is the request summary.
+      </h3>
+      <p className="mt-4 leading-7 text-ink/68">
+        This confirms the form experience only. The next production step is sending this
+        summary to you through email or an API.
+      </p>
+
+      <dl className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
+        {summary.map(([label, value]) => (
+          <div key={label} className="grid gap-2 py-4 sm:grid-cols-[0.32fr_0.68fr]">
+            <dt className="text-sm font-semibold text-lawn">{label}</dt>
+            <dd className="text-sm leading-6 text-ink/75">{value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <button
+          className="rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white transition hover:bg-lawn"
+          onClick={onReset}
+          type="button"
+        >
+          Start another request
+        </button>
+        <a
+          className="rounded-full border border-ink/15 bg-white px-6 py-3 text-center text-sm font-semibold text-ink transition hover:border-lawn hover:text-lawn"
+          href="#booking"
+        >
+          Keep reviewing
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -404,8 +639,8 @@ function ContactSection() {
             Ready when the first real booking details are.
           </h2>
           <p className="mt-5 max-w-2xl leading-7 text-ink/68">
-            Next we can connect this to email, a form provider, or a lightweight API
-            depending on how hands-on you want the launch version to be.
+            Next we can connect the request flow to email, a form provider, or a
+            lightweight API depending on how hands-on you want the launch version to be.
           </p>
         </div>
         <a
@@ -453,22 +688,144 @@ function SectionIntro({ eyebrow, title, text, inverted = false }: SectionIntroPr
 }
 
 type FieldProps = {
+  error?: string;
   label: string;
-  name: string;
+  min?: string;
+  name: keyof BookingFormState;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  required?: boolean;
   type?: string;
+  value: string;
 };
 
-function Field({ label, name, placeholder, type = 'text' }: FieldProps) {
+function Field({
+  error,
+  label,
+  min,
+  name,
+  onChange,
+  placeholder,
+  required = false,
+  type = 'text',
+  value,
+}: FieldProps) {
+  const errorId = `${name}-error`;
+
   return (
     <label className="grid gap-2 text-sm font-semibold text-forest">
       {label}
       <input
-        className="h-12 border border-ink/12 bg-cream px-3 text-sm font-normal text-ink outline-none focus:border-lawn"
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={Boolean(error)}
+        className="h-12 border border-ink/12 bg-cream px-3 text-sm font-normal text-ink outline-none transition focus:border-lawn"
+        min={min}
         name={name}
+        onChange={onChange}
         placeholder={placeholder}
+        required={required}
         type={type}
+        value={value}
       />
+      {error ? (
+        <span className="text-sm font-medium text-coral" id={errorId}>
+          {error}
+        </span>
+      ) : null}
+    </label>
+  );
+}
+
+type SelectFieldProps = {
+  error?: string;
+  label: string;
+  name: keyof BookingFormState;
+  onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+  options: string[];
+  placeholder?: string;
+  required?: boolean;
+  value: string;
+};
+
+function SelectField({
+  error,
+  label,
+  name,
+  onChange,
+  options,
+  placeholder,
+  required = false,
+  value,
+}: SelectFieldProps) {
+  const errorId = `${name}-error`;
+
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-forest">
+      {label}
+      <select
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={Boolean(error)}
+        className="h-12 border border-ink/12 bg-cream px-3 text-sm font-normal text-ink outline-none transition focus:border-lawn"
+        name={name}
+        onChange={onChange}
+        required={required}
+        value={value}
+      >
+        {placeholder ? <option value="">{placeholder}</option> : null}
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      {error ? (
+        <span className="text-sm font-medium text-coral" id={errorId}>
+          {error}
+        </span>
+      ) : null}
+    </label>
+  );
+}
+
+type TextareaFieldProps = {
+  error?: string;
+  label: string;
+  name: keyof BookingFormState;
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder?: string;
+  required?: boolean;
+  value: string;
+};
+
+function TextareaField({
+  error,
+  label,
+  name,
+  onChange,
+  placeholder,
+  required = false,
+  value,
+}: TextareaFieldProps) {
+  const errorId = `${name}-error`;
+
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-forest">
+      {label}
+      <textarea
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={Boolean(error)}
+        className="min-h-28 resize-y border border-ink/12 bg-cream px-3 py-3 text-sm font-normal text-ink outline-none transition focus:border-lawn"
+        name={name}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        value={value}
+      />
+      {error ? (
+        <span className="text-sm font-medium text-coral" id={errorId}>
+          {error}
+        </span>
+      ) : null}
     </label>
   );
 }
@@ -482,6 +839,67 @@ function Footer() {
       </div>
     </footer>
   );
+}
+
+function validateBookingForm(form: BookingFormState, today: string) {
+  const nextErrors: BookingErrors = {};
+  const phoneDigits = form.phone.replace(/\D/g, '');
+
+  if (form.name.trim().length < 2) {
+    nextErrors.name = 'Enter your name.';
+  }
+
+  if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+    nextErrors.email = 'Enter a valid email address.';
+  }
+
+  if (phoneDigits.length < 10) {
+    nextErrors.phone = 'Enter a phone number with area code.';
+  }
+
+  if (!form.occasion) {
+    nextErrors.occasion = 'Choose an occasion.';
+  }
+
+  if (!form.eventDate) {
+    nextErrors.eventDate = 'Choose a preferred date.';
+  } else if (form.eventDate < today) {
+    nextErrors.eventDate = 'Choose today or a future date.';
+  }
+
+  if (!form.setupWindow) {
+    nextErrors.setupWindow = 'Choose a setup window.';
+  }
+
+  if (form.serviceArea.trim().length < 5) {
+    nextErrors.serviceArea = 'Enter a neighborhood or address.';
+  }
+
+  if (form.honoreeName.trim().length < 1) {
+    nextErrors.honoreeName = 'Enter the name or phrase for the display.';
+  }
+
+  if (form.displayMessage.trim().length < 3) {
+    nextErrors.displayMessage = 'Enter the main display message.';
+  }
+
+  return nextErrors;
+}
+
+function getTodayInputValue() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function formatDate(value: string) {
+  if (!value) {
+    return '';
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(`${value}T00:00:00`));
 }
 
 export default App;
