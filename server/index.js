@@ -1,75 +1,101 @@
 import { createServer } from 'node:http';
+import { pathToFileURL } from 'node:url';
 import { config } from './config.js';
 import { createBookingStore } from './bookingStore.js';
 import { inventoryCatalog, packageCatalog } from './catalog.js';
 import { validateBookingPayload } from './validation.js';
 
-const bookingStore = createBookingStore(config.bookingsDataFile);
+export function createApiServer({
+  bookingStore = createBookingStore(config.bookingsDataFile),
+  storage = 'local-json',
+} = {}) {
+  return createServer(async (request, response) => {
+    setCorsHeaders(request, response);
 
-const server = createServer(async (request, response) => {
-  setCorsHeaders(request, response);
-
-  if (request.method === 'OPTIONS') {
-    response.writeHead(204);
-    response.end();
-    return;
-  }
-
-  try {
-    const url = new URL(request.url || '/', `http://${request.headers.host}`);
-
-    if (request.method === 'GET' && url.pathname === '/api/health') {
-      sendJson(response, 200, {
-        ok: true,
-        service: 'front-yard-famous-api',
-        storage: 'local-json',
-      });
+    if (request.method === 'OPTIONS') {
+      response.writeHead(204);
+      response.end();
       return;
     }
 
-    if (request.method === 'GET' && url.pathname === '/api/bookings') {
-      sendJson(response, 200, { bookings: await bookingStore.list() });
-      return;
-    }
+    try {
+      const url = new URL(request.url || '/', `http://${request.headers.host}`);
 
-    if (request.method === 'POST' && url.pathname === '/api/bookings') {
-      const body = await readJsonBody(request);
-      const validation = validateBookingPayload(body);
-
-      if (validation.errors) {
-        sendJson(response, 400, { errors: validation.errors });
+      if (request.method === 'GET' && url.pathname === '/api/health') {
+        sendJson(response, 200, {
+          ok: true,
+          service: 'front-yard-famous-api',
+          storage,
+        });
         return;
       }
 
-      const booking = await bookingStore.create(validation.value);
+      if (request.method === 'GET' && url.pathname === '/api/bookings') {
+        sendJson(response, 200, { bookings: await bookingStore.list() });
+        return;
+      }
 
-      sendJson(response, 201, {
-        id: booking.id,
-        status: booking.status,
-        receivedAt: booking.createdAt,
-        message: 'Booking request received for manual availability review.',
-      });
-      return;
+      if (request.method === 'POST' && url.pathname === '/api/bookings') {
+        const body = await readJsonBody(request).catch((error) => {
+          if (error instanceof SyntaxError) {
+            sendJson(response, 400, { error: 'Request body must be valid JSON.' });
+            return null;
+          }
+
+          throw error;
+        });
+
+        if (body === null) {
+          return;
+        }
+
+        const validation = validateBookingPayload(body);
+
+        if (validation.errors) {
+          sendJson(response, 400, { errors: validation.errors });
+          return;
+        }
+
+        const booking = await bookingStore.create(validation.value);
+
+        sendJson(response, 201, {
+          id: booking.id,
+          status: booking.status,
+          receivedAt: booking.createdAt,
+          message: 'Booking request received for manual availability review.',
+        });
+        return;
+      }
+
+      if (request.method === 'GET' && url.pathname === '/api/inventory') {
+        sendJson(response, 200, {
+          inventory: inventoryCatalog,
+          packages: packageCatalog,
+        });
+        return;
+      }
+
+      sendJson(response, 404, { error: 'Not found' });
+    } catch (error) {
+      console.error(error);
+      sendJson(response, 500, { error: 'Internal server error' });
     }
+  });
+}
 
-    if (request.method === 'GET' && url.pathname === '/api/inventory') {
-      sendJson(response, 200, {
-        inventory: inventoryCatalog,
-        packages: packageCatalog,
-      });
-      return;
-    }
+export function startApiServer({ port = config.port, host = '127.0.0.1' } = {}) {
+  const server = createApiServer();
 
-    sendJson(response, 404, { error: 'Not found' });
-  } catch (error) {
-    console.error(error);
-    sendJson(response, 500, { error: 'Internal server error' });
-  }
-});
+  server.listen(port, host, () => {
+    console.log(`Front Yard Famous API running at http://${host}:${port}`);
+  });
 
-server.listen(config.port, '127.0.0.1', () => {
-  console.log(`Front Yard Famous API running at http://127.0.0.1:${config.port}`);
-});
+  return server;
+}
+
+if (isMainModule()) {
+  startApiServer();
+}
 
 function setCorsHeaders(request, response) {
   const origin = request.headers.origin;
@@ -90,6 +116,10 @@ function setCorsHeaders(request, response) {
 function sendJson(response, statusCode, body) {
   response.writeHead(statusCode, { 'Content-Type': 'application/json' });
   response.end(JSON.stringify(body));
+}
+
+function isMainModule() {
+  return process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 }
 
 async function readJsonBody(request) {

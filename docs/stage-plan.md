@@ -5,7 +5,7 @@
 - Build in stages, not one giant run.
 - Ask before making commits.
 - Use GitHub as the project source of truth.
-- Prefer Ubuntu/WSL commands for the user-facing workflow.
+- Prefer Windows PowerShell commands for the user-facing workflow.
 - Keep customer login out of v1 unless a later stage proves it is needed.
 
 ## Stage 0: Product Direction and Repo Setup
@@ -136,6 +136,18 @@ Testing:
 - API tests when backend exists.
 - Playwright smoke tests.
 - Accessibility checks.
+
+Build:
+- Node built-in test runner for backend tests without new package installs.
+- Validation tests for booking request payloads.
+- API route tests for health, booking create/list, invalid payloads, malformed JSON, and inventory data.
+- `npm run test:api` for backend tests.
+- `npm test` for lint, build, and API tests in one command.
+- Server refactor that allows tests to start the API on a random port.
+
+Deferred:
+- Add Vitest and React Testing Library once the project is ready for additional test dependencies.
+- Add Playwright smoke tests after the frontend and API dev servers are stable together.
 
 Commit checkpoint:
 - `test: add booking and public page coverage`

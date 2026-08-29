@@ -9,7 +9,9 @@
     "build": "tsc -b && vite build",
     "start:api": "node server/index.js",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "npm run lint && npm run build && npm run test:api",
+    "test:api": "node --test \"tests/api/**/*.test.js\""
   },
   "dependencies": {
     "react": "^19.1.1",

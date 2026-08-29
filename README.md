@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 6 backend and persistence foundation**
+Current stage: **Stage 7 testing and quality**
 
-The current milestone is a lightweight Node API for booking requests, local durable JSON storage for development, and frontend form submission through `/api/bookings` before adding real auth, Mongo Atlas, payments, or customer accounts.
+The current milestone is a no-dependency test layer for backend validation, API route behavior, build confidence, and lint quality before adding heavier browser and component test tooling.
 
 ## Tech Stack
 
@@ -17,12 +17,15 @@ The current milestone is a lightweight Node API for booking requests, local dura
 
 ## Local Development
 
-From Ubuntu/WSL:
+From Windows PowerShell:
 
 ```bash
-npm install
 npm run dev
 ```
+
+Keep npm commands for this repo in one environment. If you are using Windows,
+run install, dev, build, lint, and test from Windows PowerShell so native
+optional dependencies like Rollup match the operating system.
 
 Run the local API in a second terminal:
 
@@ -40,6 +43,18 @@ Lint check:
 
 ```bash
 npm run lint
+```
+
+Full quality check:
+
+```bash
+npm test
+```
+
+API test check:
+
+```bash
+npm run test:api
 ```
 
 Admin preview:
@@ -60,8 +75,8 @@ curl http://127.0.0.1:4000/api/bookings
 
 Copy `.env.example` to `.env` when you want local API configuration:
 
-```bash
-cp .env.example .env
+```powershell
+Copy-Item .env.example .env
 ```
 
 Default local booking requests are stored in `.data/booking-requests.json`, which is ignored by Git.
@@ -93,6 +108,25 @@ Stage 6 adds a built-in Node HTTP API with these starter endpoints:
 - `GET /api/inventory`
 
 The current persistence layer uses local JSON so the booking workflow can be tested immediately. Mongo Atlas remains the intended production persistence option once backend dependencies and deployment details are added.
+
+## Testing Direction
+
+Stage 7 uses Node's built-in test runner so the project gets useful coverage without adding new packages during the local environment transition.
+
+Current coverage:
+
+- Booking payload validation.
+- API health metadata.
+- Booking request validation failures.
+- Malformed JSON handling.
+- Booking creation and listing.
+- Starter inventory/package endpoint.
+
+Later quality pass:
+
+- Add Vitest and React Testing Library for component tests.
+- Add Playwright for browser smoke tests across `/`, `/admin`, and booking submission.
+- Add CI once the deployment path is chosen.
 
 ## Version 1 Recommendation
 
