@@ -95,6 +95,13 @@ export type BookingFormState = {
 
 export type BookingErrors = Partial<Record<keyof BookingFormState, string>>;
 
+export type BookingSubmissionResponse = {
+  id: string;
+  status: BookingStatus;
+  receivedAt: string;
+  message: string;
+};
+
 export type AdminMetric = {
   label: string;
   value: string;

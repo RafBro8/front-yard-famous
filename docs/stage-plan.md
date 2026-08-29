@@ -110,6 +110,20 @@ Possible stack:
 - Vercel frontend.
 - Render or serverless API hosting.
 
+Build:
+- Lightweight Node API without external backend packages for the first persistence pass.
+- `POST /api/bookings` for customer booking requests.
+- `GET /api/bookings` for admin review workflows.
+- `GET /api/inventory` for future inventory-backed admin screens.
+- Local JSON persistence in `.data/booking-requests.json`.
+- Vite proxy from `/api` to the local API during development.
+- Environment example for API port, client origin, local data file, and future Mongo URI.
+
+Next backend pass:
+- Add Express once npm registry access is reliable in the working environment.
+- Add MongoDB Atlas persistence behind the same booking store interface.
+- Add admin-only auth before exposing real booking management publicly.
+
 Commit checkpoint:
 - `feat: add backend persistence`
 

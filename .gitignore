@@ -11,6 +11,7 @@ test-results/
 .env
 .env.*
 !.env.example
+.data/
 
 # Editor and OS files
 .DS_Store

@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { submitBookingRequest } from './api/bookingRequests';
 import {
   addOns,
   availabilityRules,
@@ -13,7 +14,7 @@ import {
   setupWindows,
 } from './data/siteContent';
 import { AdminDashboard } from './pages/AdminDashboard';
-import type { BookingErrors, BookingFormState } from './types/business';
+import type { BookingErrors, BookingFormState, BookingSubmissionResponse } from './types/business';
 
 function App() {
   if (window.location.pathname.startsWith('/admin')) {
@@ -27,6 +28,9 @@ function PublicSite() {
   const [bookingForm, setBookingForm] = useState(initialBookingForm);
   const [errors, setErrors] = useState<BookingErrors>({});
   const [submittedRequest, setSubmittedRequest] = useState<BookingFormState | null>(null);
+  const [submission, setSubmission] = useState<BookingSubmissionState>({
+    status: 'idle',
+  });
   const today = useMemo(getTodayInputValue, []);
 
   function updateBookingField(
@@ -47,7 +51,7 @@ function PublicSite() {
     }
   }
 
-  function handleBookingSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleBookingSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextErrors = validateBookingForm(bookingForm, today);
@@ -55,16 +59,30 @@ function PublicSite() {
 
     if (Object.keys(nextErrors).length > 0) {
       setSubmittedRequest(null);
+      setSubmission({ status: 'idle' });
       return;
     }
 
-    setSubmittedRequest(bookingForm);
+    setSubmission({ status: 'submitting' });
+
+    try {
+      const response = await submitBookingRequest(bookingForm);
+      setSubmittedRequest(bookingForm);
+      setSubmission({ response, status: 'success' });
+    } catch (error) {
+      setSubmittedRequest(null);
+      setSubmission({
+        error: error instanceof Error ? error.message : 'The request could not be sent.',
+        status: 'error',
+      });
+    }
   }
 
   function resetBookingForm() {
     setBookingForm(initialBookingForm);
     setErrors({});
     setSubmittedRequest(null);
+    setSubmission({ status: 'idle' });
   }
 
   return (
@@ -81,6 +99,7 @@ function PublicSite() {
         onChange={updateBookingField}
         onReset={resetBookingForm}
         onSubmit={handleBookingSubmit}
+        submission={submission}
         submittedRequest={submittedRequest}
       />
       <FaqSection />
@@ -89,6 +108,12 @@ function PublicSite() {
     </main>
   );
 }
+
+type BookingSubmissionState =
+  | { status: 'idle' }
+  | { status: 'submitting' }
+  | { status: 'success'; response: BookingSubmissionResponse }
+  | { status: 'error'; error: string };
 
 function Header() {
   return (
@@ -254,6 +279,7 @@ type BookingSectionProps = {
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   onReset: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  submission: BookingSubmissionState;
   submittedRequest: BookingFormState | null;
 };
 
@@ -264,6 +290,7 @@ function BookingSection({
   onChange,
   onReset,
   onSubmit,
+  submission,
   submittedRequest,
 }: BookingSectionProps) {
   return (
@@ -300,7 +327,11 @@ function BookingSection({
 
         <div className="border border-ink/10 bg-white p-6 sm:p-8">
           {submittedRequest ? (
-            <BookingConfirmation request={submittedRequest} onReset={onReset} />
+            <BookingConfirmation
+              request={submittedRequest}
+              response={submission.status === 'success' ? submission.response : null}
+              onReset={onReset}
+            />
           ) : (
             <form noValidate onSubmit={onSubmit}>
               <div className="grid gap-6">
@@ -419,15 +450,21 @@ function BookingSection({
                 />
 
                 <div className="flex flex-col gap-3 border-t border-ink/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm leading-6 text-ink/58">
-                    No payment is collected here. You will receive a confirmation before
-                    the booking is official.
-                  </p>
+                  <div className="text-sm leading-6 text-ink/58">
+                    <p>
+                      No payment is collected here. You will receive a confirmation before
+                      the booking is official.
+                    </p>
+                    {submission.status === 'error' ? (
+                      <p className="mt-2 font-semibold text-coral">{submission.error}</p>
+                    ) : null}
+                  </div>
                   <button
-                    className="rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition hover:bg-forest"
+                    className="rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition hover:bg-forest disabled:cursor-not-allowed disabled:bg-ink/30"
+                    disabled={submission.status === 'submitting'}
                     type="submit"
                   >
-                    Review request
+                    {submission.status === 'submitting' ? 'Sending request...' : 'Send request'}
                   </button>
                 </div>
               </div>
@@ -441,11 +478,13 @@ function BookingSection({
 
 type BookingConfirmationProps = {
   request: BookingFormState;
+  response: BookingSubmissionResponse | null;
   onReset: () => void;
 };
 
-function BookingConfirmation({ request, onReset }: BookingConfirmationProps) {
+function BookingConfirmation({ request, response, onReset }: BookingConfirmationProps) {
   const summary = [
+    ['Request ID', response?.id || 'Pending'],
     ['Occasion', request.occasion],
     ['Display name', request.honoreeName],
     ['Preferred date', formatDate(request.eventDate)],
@@ -464,8 +503,8 @@ function BookingConfirmation({ request, onReset }: BookingConfirmationProps) {
         Thanks, {request.name}. Here is the request summary.
       </h3>
       <p className="mt-4 leading-7 text-ink/68">
-        This confirms the form experience only. The next production step is sending this
-        summary to you through email or an API.
+        Your request has been saved for manual availability review. The booking is not
+        official until the date, location, and inventory are confirmed.
       </p>
 
       <dl className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
