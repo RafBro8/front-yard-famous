@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "node --watch server/index.js",
+    "demo:reset": "node scripts/resetDemoData.js",
     "build": "tsc -b && vite build",
     "start:api": "node server/index.js",
     "preview": "vite preview",

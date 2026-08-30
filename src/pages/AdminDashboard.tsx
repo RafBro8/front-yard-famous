@@ -108,8 +108,8 @@ function AdminDashboard() {
             </h1>
           </div>
           <p className="max-w-2xl leading-7 text-ink/68">
-            This admin view now runs on local demo API data, with seeded requests,
-            inventory availability, status updates, and real loading/error states.
+            Review requests, adjust booking statuses, track available inventory, and
+            present a complete operator workflow from a lightweight demo API.
           </p>
         </div>
       </section>

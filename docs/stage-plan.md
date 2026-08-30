@@ -207,15 +207,31 @@ Commit checkpoint:
 Goal: make the project easy to showcase, review, and sell as a demo product.
 
 Build:
-- Deploy the frontend.
-- Decide whether to deploy the demo API or keep it local-only.
+- Add guided demo instructions.
+- Add resettable seeded demo data.
 - Add screenshots or short screen recordings.
 - Add demo instructions and customization notes.
 - Add a portfolio case-study writeup.
+- Add buyer/client customization notes.
+- Decide whether to deploy the demo API or keep it local-only.
 - Optional demo credentials if auth is introduced.
 
 Commit checkpoint:
 - `docs: add demo case study`
+
+## Stage 10.5: Visual QA and Polish
+
+Goal: make the demo feel screenshot-ready on desktop and mobile.
+
+Build:
+- Review homepage, booking page, and admin dashboard at desktop and mobile widths.
+- Check route loading, typography scale, spacing, button alignment, and image framing.
+- Tighten visible copy that makes the app feel like a prototype instead of a polished demo.
+- Confirm the app remains readable when the API is unavailable.
+- Run the full test suite after visual changes.
+
+Commit checkpoint:
+- `style: polish demo visual qa`
 
 ## Stage 11: Yard Display Builder
 

@@ -398,6 +398,7 @@ function OccasionsSection() {
           eyebrow="Occasions"
           title="Clear options for the moments people already search for."
           text="The site should help customers quickly recognize their occasion, then guide them toward a request without making them sort through a crowded catalog."
+          headingLevel="h1"
         />
         <div className="mt-10 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 md:grid-cols-2 lg:grid-cols-3">
           {occasions.map((occasion) => (
@@ -422,9 +423,9 @@ function GallerySection() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
             Gallery
           </p>
-          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
             A visual showroom for real inventory.
-          </h2>
+          </h1>
           <p className="mt-5 leading-7 text-ink/68">
             As product photos are added, this area can become the main place to browse
             display styles, themes, add-ons, and past setups.
@@ -524,6 +525,7 @@ function PricingSection() {
           eyebrow="Pricing"
           title="Simple starting packages with room for custom add-ons."
           text="Prices are placeholders for planning. The structure keeps the page easy to scan while leaving flexibility for delivery zones, inventory, and custom requests."
+          headingLevel="h1"
           inverted
         />
         <div className="mt-10 grid gap-px overflow-hidden border border-white/14 bg-white/14 lg:grid-cols-3">
@@ -580,9 +582,9 @@ function BookingSection({
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
             Booking request
           </p>
-          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
             Request first, confirm manually.
-          </h2>
+          </h1>
           <p className="mt-5 leading-7 text-ink/68">
             This v1 flow collects the details you need without customer accounts,
             instant checkout, or the risk of double-booking inventory.
@@ -870,10 +872,19 @@ type SectionIntroProps = {
   eyebrow: string;
   title: string;
   text: string;
+  headingLevel?: 'h1' | 'h2';
   inverted?: boolean;
 };
 
-function SectionIntro({ eyebrow, title, text, inverted = false }: SectionIntroProps) {
+function SectionIntro({
+  eyebrow,
+  title,
+  text,
+  headingLevel = 'h2',
+  inverted = false,
+}: SectionIntroProps) {
+  const Heading = headingLevel;
+
   return (
     <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
       <div>
@@ -884,13 +895,13 @@ function SectionIntro({ eyebrow, title, text, inverted = false }: SectionIntroPr
         >
           {eyebrow}
         </p>
-        <h2
+        <Heading
           className={`mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight ${
             inverted ? 'text-white' : 'text-forest'
           }`}
         >
           {title}
-        </h2>
+        </Heading>
       </div>
       <p className={`max-w-xl leading-7 ${inverted ? 'text-white/70' : 'text-ink/68'}`}>
         {text}

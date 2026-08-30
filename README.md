@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 9 demo product polish and admin workflow**
+Current stage: **Stage 10/10.5 deployable demo, case study, and visual QA**
 
-The current milestone is a portfolio-ready product demo with API-backed admin bookings, seeded demo data, status updates, inventory availability, and polished operational states.
+The current milestone is a showcase-ready demo package with resettable sample data, case-study documentation, deployment guidance, and visual QA polish.
 
 ## Tech Stack
 
@@ -55,6 +55,12 @@ API test check:
 
 ```bash
 npm run test:api
+```
+
+Reset demo data:
+
+```bash
+npm run demo:reset
 ```
 
 Admin preview:
@@ -152,6 +158,13 @@ Launch checklist:
 
 - `docs/deployment-checklist.md`
 
+Demo documentation:
+
+- `docs/demo-guide.md`
+- `docs/case-study.md`
+- `docs/customization-guide.md`
+- `docs/visual-qa.md`
+
 ## Portfolio Case Study
 
 Front Yard Famous can be treated as a polished portfolio product instead of an active business launch.
@@ -185,10 +198,18 @@ Demo features:
 
 Screenshots to add:
 
-- Homepage first viewport.
-- Booking form confirmation.
-- Admin dashboard with seeded bookings.
-- Inventory availability panel.
+- `docs/screenshots/home-desktop.png`
+- `docs/screenshots/booking-desktop.png`
+- `docs/screenshots/admin-desktop.png`
+- `docs/screenshots/home-mobile.png`
+- `docs/screenshots/booking-mobile.png`
+- `docs/screenshots/admin-mobile.png`
+
+## Demo Package Direction
+
+Stage 10 packages the project for portfolio review or resale. It adds a guided demo flow, resettable seeded data, a fuller case study, buyer customization notes, and launch/deployment references.
+
+Stage 10.5 adds visual QA and polish checks across the customer homepage, booking page, and admin dashboard so the project is ready for screenshots and walkthroughs.
 
 ## Version 1 Recommendation
 
