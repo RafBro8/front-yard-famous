@@ -1,0 +1,16 @@
+{
+  "name": "Front Yard Famous",
+  "short_name": "FYF",
+  "description": "Modern yard greetings, storks, milestone numbers, and custom celebration displays.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff8ef",
+  "theme_color": "#123526",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

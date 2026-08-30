@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 7 testing and quality**
+Current stage: **Stage 8 production launch prep**
 
-The current milestone is a no-dependency test layer for backend validation, API route behavior, build confidence, and lint quality before adding heavier browser and component test tooling.
+The current milestone is production-readiness for metadata, social previews, favicon assets, direct-route refreshes, service-area copy, and deployment planning.
 
 ## Tech Stack
 
@@ -63,6 +63,16 @@ Admin preview:
 npm run dev
 # open http://localhost:5173/admin
 ```
+
+Public routes:
+
+- `/`
+- `/occasions`
+- `/gallery`
+- `/pricing`
+- `/booking`
+- `/faq`
+- `/admin`
 
 API checks:
 
@@ -127,6 +137,18 @@ Later quality pass:
 - Add Vitest and React Testing Library for component tests.
 - Add Playwright for browser smoke tests across `/`, `/admin`, and booking submission.
 - Add CI once the deployment path is chosen.
+
+## Public Site Direction
+
+Stage 7.5 keeps the homepage light and moves deeper customer content into focused routes. This avoids the crowded single-page feel while keeping navigation simple and familiar.
+
+## Launch Direction
+
+Stage 8 adds route-specific metadata, social preview tags, favicon/manifest files, robots and sitemap files, and a Vercel rewrite so direct refreshes on public routes work in production. The sitemap and social URLs currently use `https://fyf.com` as the planned production domain placeholder.
+
+Launch checklist:
+
+- `docs/deployment-checklist.md`
 
 ## Version 1 Recommendation
 

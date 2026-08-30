@@ -16,11 +16,11 @@ export const heroImage = {
 };
 
 export const navItems: NavItem[] = [
-  { label: 'Occasions', href: '#occasions' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Booking', href: '#booking' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Occasions', href: '/occasions' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Booking', href: '/booking' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 export const occasions: OccasionCategory[] = [

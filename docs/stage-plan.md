@@ -152,6 +152,21 @@ Deferred:
 Commit checkpoint:
 - `test: add booking and public page coverage`
 
+## Stage 7.5: Public Site Structure and Navigation Cleanup
+
+Goal: make the customer site feel cleaner and less like a crammed single-page prototype.
+
+Build:
+- Route-aware public site without adding a router dependency.
+- Lightweight homepage with hero, occasion preview, gallery preview, and booking call-to-action.
+- Dedicated customer pages for `/occasions`, `/gallery`, `/pricing`, `/booking`, and `/faq`.
+- Shared header and footer across public pages.
+- Navigation links that move customers to focused pages instead of scrolling through one long homepage.
+- Keep `/admin` separate from customer navigation and customer content.
+
+Commit checkpoint:
+- `refactor: split public site into focused pages`
+
 ## Stage 8: Production Launch Prep
 
 Goal: prepare for real customers.
@@ -163,6 +178,10 @@ Build:
 - Analytics.
 - Service area copy.
 - Deployment environment setup.
+- Route-specific browser titles and descriptions.
+- Static `robots.txt`, `sitemap.xml`, and web app manifest.
+- Vercel rewrite for direct refreshes on client-rendered routes.
+- Deployment checklist for frontend, backend, API URL, domain, and launch validation.
 
 Commit checkpoint:
 - `chore: prepare production launch`

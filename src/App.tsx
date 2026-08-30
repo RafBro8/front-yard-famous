@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { submitBookingRequest } from './api/bookingRequests';
 import {
   addOns,
@@ -16,15 +16,73 @@ import {
 import { AdminDashboard } from './pages/AdminDashboard';
 import type { BookingErrors, BookingFormState, BookingSubmissionResponse } from './types/business';
 
+type PublicPath = '/' | '/occasions' | '/gallery' | '/pricing' | '/booking' | '/faq';
+
+const publicPaths = new Set<PublicPath>(['/', '/occasions', '/gallery', '/pricing', '/booking', '/faq']);
+const siteUrl = 'https://fyf.com';
+const socialImagePath = '/images/hero-birthday-display.png';
+
+const publicPageMetadata: Record<PublicPath, PageMetadataDefinition> = {
+  '/': {
+    title: 'Front Yard Famous | Modern Yard Greetings',
+    description:
+      'Stylish yard sign setups for birthdays, new babies, graduations, anniversaries, retirements, and custom celebrations.',
+    path: '/',
+  },
+  '/occasions': {
+    title: 'Occasions | Front Yard Famous',
+    description:
+      'Browse Front Yard Famous yard greeting options for birthdays, new babies, graduations, anniversaries, retirements, and custom celebrations.',
+    path: '/occasions',
+  },
+  '/gallery': {
+    title: 'Gallery | Front Yard Famous',
+    description:
+      'Explore modern yard sign display ideas, milestone numbers, storks, graduation setups, and celebration themes from Front Yard Famous.',
+    path: '/gallery',
+  },
+  '/pricing': {
+    title: 'Pricing | Front Yard Famous',
+    description:
+      'Review simple starting packages and custom yard sign setup options from Front Yard Famous.',
+    path: '/pricing',
+  },
+  '/booking': {
+    title: 'Request a Date | Front Yard Famous',
+    description:
+      'Request a Front Yard Famous yard sign setup date and share celebration details for manual availability review.',
+    path: '/booking',
+  },
+  '/faq': {
+    title: 'FAQ and Service Area | Front Yard Famous',
+    description:
+      'Find answers about Front Yard Famous setup timing, booking confirmation, service area review, weather, and custom yard greeting requests.',
+    path: '/faq',
+  },
+};
+
+const adminPageMetadata: PageMetadataDefinition = {
+  title: 'Admin | Front Yard Famous',
+  description: 'Private Front Yard Famous booking and inventory management area.',
+  path: '/admin',
+  robots: 'noindex,nofollow',
+};
+
 function App() {
   if (window.location.pathname.startsWith('/admin')) {
-    return <AdminDashboard />;
+    return (
+      <>
+        <PageMetadata metadata={adminPageMetadata} />
+        <AdminDashboard />
+      </>
+    );
   }
 
   return <PublicSite />;
 }
 
 function PublicSite() {
+  const currentPath = getPublicPath(window.location.pathname);
   const [bookingForm, setBookingForm] = useState(initialBookingForm);
   const [errors, setErrors] = useState<BookingErrors>({});
   const [submittedRequest, setSubmittedRequest] = useState<BookingFormState | null>(null);
@@ -87,23 +145,36 @@ function PublicSite() {
 
   return (
     <main className="min-h-screen bg-cream text-ink">
-      <Header />
-      <Hero />
-      <OccasionsSection />
-      <GallerySection />
-      <PricingSection />
-      <BookingSection
-        errors={errors}
-        form={bookingForm}
-        minDate={today}
-        onChange={updateBookingField}
-        onReset={resetBookingForm}
-        onSubmit={handleBookingSubmit}
-        submission={submission}
-        submittedRequest={submittedRequest}
-      />
-      <FaqSection />
-      <ContactSection />
+      <PageMetadata metadata={publicPageMetadata[currentPath]} />
+      <Header currentPath={currentPath} />
+      {currentPath === '/' ? <HomePage /> : null}
+      {currentPath === '/occasions' ? <OccasionsSection /> : null}
+      {currentPath === '/gallery' ? <GallerySection /> : null}
+      {currentPath === '/pricing' ? (
+        <>
+          <PricingSection />
+          <BookingPrompt />
+        </>
+      ) : null}
+      {currentPath === '/booking' ? (
+        <BookingSection
+          errors={errors}
+          form={bookingForm}
+          minDate={today}
+          onChange={updateBookingField}
+          onReset={resetBookingForm}
+          onSubmit={handleBookingSubmit}
+          submission={submission}
+          submittedRequest={submittedRequest}
+        />
+      ) : null}
+      {currentPath === '/faq' ? (
+        <>
+          <ServiceAreaSection />
+          <FaqSection />
+          <ContactSection />
+        </>
+      ) : null}
       <Footer />
     </main>
   );
@@ -115,23 +186,63 @@ type BookingSubmissionState =
   | { status: 'success'; response: BookingSubmissionResponse }
   | { status: 'error'; error: string };
 
-function Header() {
+type PageMetadataDefinition = {
+  title: string;
+  description: string;
+  path: string;
+  robots?: string;
+};
+
+function PageMetadata({ metadata }: { metadata: PageMetadataDefinition }) {
+  useEffect(() => {
+    const canonicalUrl = new URL(metadata.path, siteUrl).toString();
+    const imageUrl = new URL(socialImagePath, siteUrl).toString();
+
+    document.title = metadata.title;
+    setMetaTag('name', 'description', metadata.description);
+    setMetaTag('name', 'robots', metadata.robots || 'index,follow');
+    setMetaTag('property', 'og:title', metadata.title);
+    setMetaTag('property', 'og:description', metadata.description);
+    setMetaTag('property', 'og:url', canonicalUrl);
+    setMetaTag('property', 'og:image', imageUrl);
+    setMetaTag('name', 'twitter:title', metadata.title);
+    setMetaTag('name', 'twitter:description', metadata.description);
+    setMetaTag('name', 'twitter:image', imageUrl);
+    setCanonicalLink(canonicalUrl);
+  }, [metadata]);
+
+  return null;
+}
+
+type HeaderProps = {
+  currentPath: PublicPath;
+};
+
+function Header({ currentPath }: HeaderProps) {
   return (
     <header className="border-b border-ink/10 bg-cream/95">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-5 px-5 py-5 sm:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
         <a className="font-display text-2xl font-semibold text-forest" href="/">
           Front Yard Famous
         </a>
-        <nav aria-label="Main navigation" className="hidden items-center gap-7 text-sm font-semibold lg:flex">
+        <nav aria-label="Main navigation" className="flex w-full gap-2 overflow-x-auto text-sm font-semibold lg:w-auto lg:items-center lg:gap-3">
           {navItems.map((item) => (
-            <a key={item.href} className="transition hover:text-lawn" href={item.href}>
+            <a
+              key={item.href}
+              className={`border px-3 py-2 transition ${
+                currentPath === item.href
+                  ? 'border-lawn bg-mint text-lawn'
+                  : 'border-ink/10 bg-white text-ink/70 hover:border-lawn hover:text-lawn'
+              }`}
+              href={item.href}
+            >
               {item.label}
             </a>
           ))}
         </nav>
         <a
-          className="rounded-full bg-forest px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-lawn"
-          href="#booking"
+          className="bg-forest px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-lawn"
+          href="/booking"
         >
           Request a date
         </a>
@@ -157,13 +268,13 @@ function Hero() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
             className="rounded-full bg-coral px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-forest"
-            href="#booking"
+            href="/booking"
           >
             Start a booking request
           </a>
           <a
             className="rounded-full border border-ink/15 bg-white px-6 py-3 text-center text-sm font-semibold text-ink transition hover:border-lawn hover:text-lawn"
-            href="#gallery"
+            href="/gallery"
           >
             Browse display ideas
           </a>
@@ -177,9 +288,111 @@ function Hero() {
   );
 }
 
+function HomePage() {
+  return (
+    <>
+      <Hero />
+      <HomeOccasionsPreview />
+      <HomeGalleryPreview />
+      <HomeBookingBand />
+    </>
+  );
+}
+
+function HomeOccasionsPreview() {
+  return (
+    <section className="border-y border-ink/10 bg-linen py-14">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
+              Occasions
+            </p>
+            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+              A clear path for every celebration.
+            </h2>
+          </div>
+          <div>
+            <p className="max-w-xl leading-7 text-ink/68">
+              Customers can start with the moment they are celebrating, then move into
+              gallery ideas, pricing, or a focused request form.
+            </p>
+            <a className="mt-5 inline-block bg-forest px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-lawn" href="/occasions">
+              View all occasions
+            </a>
+          </div>
+        </div>
+        <div className="mt-9 grid gap-px overflow-hidden border border-ink/10 bg-ink/10 md:grid-cols-2 lg:grid-cols-4">
+          {occasions.slice(0, 4).map((occasion) => (
+            <article key={occasion.slug} className="bg-white p-5">
+              <h3 className="font-display text-2xl font-semibold text-forest">
+                {occasion.name}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-ink/65">{occasion.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HomeGalleryPreview() {
+  return (
+    <section className="py-14">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <img
+          alt="Birthday yard display concept in front of a home"
+          className="aspect-[16/10] w-full border border-ink/10 object-cover"
+          src={heroImage.src}
+        />
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
+            Gallery
+          </p>
+          <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+            Show the style first, then the details.
+          </h2>
+          <p className="mt-5 leading-7 text-ink/68">
+            The full gallery can become the visual showroom for real inventory,
+            themes, and finished setups as product photos are added.
+          </p>
+          <a className="mt-6 inline-block bg-coral px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-forest" href="/gallery">
+            Browse gallery
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HomeBookingBand() {
+  return (
+    <section className="bg-forest py-12 text-white">
+      <div className="mx-auto grid max-w-6xl gap-6 px-5 sm:px-8 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-butter">
+            Booking
+          </p>
+          <h2 className="mt-3 font-display text-4xl font-semibold leading-tight">
+            Ready to check a date?
+          </h2>
+          <p className="mt-4 max-w-2xl leading-7 text-white/70">
+            The request flow stays focused on date, location, occasion, and style notes
+            so availability can be confirmed manually.
+          </p>
+        </div>
+        <a className="bg-butter px-6 py-3 text-center text-sm font-semibold text-forest transition hover:bg-white" href="/booking">
+          Start request
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function OccasionsSection() {
   return (
-    <section id="occasions" className="border-y border-ink/10 bg-linen py-16">
+    <section id="occasions" className="border-b border-ink/10 bg-linen py-16">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionIntro
           eyebrow="Occasions"
@@ -230,6 +443,73 @@ function GallerySection() {
               <p className="mt-3 text-sm leading-6 text-ink/65">{item.description}</p>
             </article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BookingPrompt() {
+  return (
+    <section className="py-12">
+      <div className="mx-auto grid max-w-6xl gap-5 px-5 sm:px-8 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <h2 className="font-display text-3xl font-semibold text-forest">
+            Pricing starts the conversation.
+          </h2>
+          <p className="mt-3 max-w-2xl leading-7 text-ink/68">
+            Final availability and exact package fit are confirmed after the request is reviewed.
+          </p>
+        </div>
+        <a className="bg-coral px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-forest" href="/booking">
+          Request a date
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function ServiceAreaSection() {
+  return (
+    <section className="border-b border-ink/10 bg-linen py-16">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lawn">
+            Service area
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-forest">
+            Local setup coverage, confirmed before booking.
+          </h1>
+          <p className="mt-5 leading-7 text-ink/68">
+            Front Yard Famous can start with a practical service-area review instead of
+            promising instant availability across every neighborhood.
+          </p>
+        </div>
+        <div className="grid gap-px overflow-hidden border border-ink/10 bg-ink/10 md:grid-cols-3">
+          <article className="bg-white p-6">
+            <h2 className="font-display text-2xl font-semibold text-forest">
+              Confirmed manually
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-ink/65">
+              Every request is checked for date, address, route timing, and inventory fit.
+            </p>
+          </article>
+          <article className="bg-white p-6">
+            <h2 className="font-display text-2xl font-semibold text-forest">
+              Route-aware setup
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-ink/65">
+              Setup windows stay flexible while the business is building capacity.
+            </p>
+          </article>
+          <article className="bg-white p-6">
+            <h2 className="font-display text-2xl font-semibold text-forest">
+              Clear follow-up
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-ink/65">
+              Customers receive confirmation before a date is treated as booked.
+            </p>
+          </article>
         </div>
       </div>
     </section>
@@ -832,6 +1112,40 @@ function formatDate(value: string) {
     month: 'long',
     year: 'numeric',
   }).format(new Date(`${value}T00:00:00`));
+}
+
+function setMetaTag(attribute: 'name' | 'property', key: string, content: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+
+  if (!element) {
+    element = document.createElement('meta');
+    element.setAttribute(attribute, key);
+    document.head.appendChild(element);
+  }
+
+  element.setAttribute('content', content);
+}
+
+function setCanonicalLink(href: string) {
+  let element = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+
+  if (!element) {
+    element = document.createElement('link');
+    element.setAttribute('rel', 'canonical');
+    document.head.appendChild(element);
+  }
+
+  element.setAttribute('href', href);
+}
+
+function getPublicPath(pathname: string): PublicPath {
+  const normalizedPath = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
+
+  if (publicPaths.has(normalizedPath as PublicPath)) {
+    return normalizedPath as PublicPath;
+  }
+
+  return '/';
 }
 
 export default App;

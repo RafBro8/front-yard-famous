@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Front Yard Famous monogram">
+  <rect width="64" height="64" fill="#fff8ef"/>
+  <path fill="#123526" d="M10 46h44v6H10z"/>
+  <path fill="#246b45" d="M18 16h29v8H26v8h17v8H26v12h-8z"/>
+  <circle cx="49" cy="18" r="7" fill="#f26b5b"/>
+  <path fill="#f7d56f" d="m46 14 3 2 3-2-1 4 3 3h-4l-1 4-2-4h-4l3-3z"/>
+</svg>
