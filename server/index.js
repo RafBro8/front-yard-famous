@@ -3,10 +3,13 @@ import { pathToFileURL } from 'node:url';
 import { config } from './config.js';
 import { createBookingStore } from './bookingStore.js';
 import { inventoryCatalog, packageCatalog } from './catalog.js';
+import { demoBookings } from './demoData.js';
 import { validateBookingPayload } from './validation.js';
 
+const bookingStatuses = new Set(['new', 'reviewing', 'confirmed', 'declined', 'completed']);
+
 export function createApiServer({
-  bookingStore = createBookingStore(config.bookingsDataFile),
+  bookingStore = createBookingStore(config.bookingsDataFile).seed(demoBookings),
   storage = 'local-json',
 } = {}) {
   return createServer(async (request, response) => {
@@ -32,6 +35,41 @@ export function createApiServer({
 
       if (request.method === 'GET' && url.pathname === '/api/bookings') {
         sendJson(response, 200, { bookings: await bookingStore.list() });
+        return;
+      }
+
+      const bookingStatusMatch = url.pathname.match(/^\/api\/bookings\/([^/]+)\/status$/);
+
+      if (request.method === 'PATCH' && bookingStatusMatch) {
+        const body = await readJsonBody(request).catch((error) => {
+          if (error instanceof SyntaxError) {
+            sendJson(response, 400, { error: 'Request body must be valid JSON.' });
+            return null;
+          }
+
+          throw error;
+        });
+
+        if (body === null) {
+          return;
+        }
+
+        if (!body || typeof body.status !== 'string' || !bookingStatuses.has(body.status)) {
+          sendJson(response, 400, { error: 'Choose a valid booking status.' });
+          return;
+        }
+
+        const booking = await bookingStore.updateStatus(
+          decodeURIComponent(bookingStatusMatch[1]),
+          body.status,
+        );
+
+        if (!booking) {
+          sendJson(response, 404, { error: 'Booking request not found.' });
+          return;
+        }
+
+        sendJson(response, 200, { booking });
         return;
       }
 
@@ -109,7 +147,7 @@ function setCorsHeaders(request, response) {
     response.setHeader('Access-Control-Allow-Origin', origin);
   }
 
-  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 

@@ -102,6 +102,30 @@ export type BookingSubmissionResponse = {
   message: string;
 };
 
+export type BookingRecord = BookingFormState & {
+  id: string;
+  status: BookingStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type InventoryAvailabilityItem = {
+  id: string;
+  name: string;
+  category: InventoryCategory;
+  status: InventoryStatus;
+  quantity: number;
+  reserved: number;
+};
+
+export type PackageCatalogItem = Pick<PackageTier, 'id' | 'name' | 'priceLabel'>;
+
+export type AdminDashboardData = {
+  bookings: BookingRecord[];
+  inventory: InventoryAvailabilityItem[];
+  packages: PackageCatalogItem[];
+};
+
 export type AdminMetric = {
   label: string;
   value: string;

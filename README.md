@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 8 production launch prep**
+Current stage: **Stage 9 demo product polish and admin workflow**
 
-The current milestone is production-readiness for metadata, social previews, favicon assets, direct-route refreshes, service-area copy, and deployment planning.
+The current milestone is a portfolio-ready product demo with API-backed admin bookings, seeded demo data, status updates, inventory availability, and polished operational states.
 
 ## Tech Stack
 
@@ -106,7 +106,7 @@ These frontend models are intentionally shaped so they can later map to MongoDB 
 
 ## Admin Direction
 
-Stage 5 adds a separate `/admin` view with mock booking requests, statuses, inventory priorities, package controls, and blackout dates. It is intentionally frontend-only so the user-facing site can stay polished while the operational workflow is designed before backend and authentication decisions.
+Stage 9 turns `/admin` into an API-backed demo dashboard with seeded bookings, live status updates, inventory availability, package catalog data, and loading/empty/error states. It is still intentionally demo-focused and does not expose real auth or customer data.
 
 ## API Direction
 
@@ -130,6 +130,8 @@ Current coverage:
 - Booking request validation failures.
 - Malformed JSON handling.
 - Booking creation and listing.
+- Booking status updates.
+- Seeded demo booking behavior.
 - Starter inventory/package endpoint.
 
 Later quality pass:
@@ -149,6 +151,44 @@ Stage 8 adds route-specific metadata, social preview tags, favicon/manifest file
 Launch checklist:
 
 - `docs/deployment-checklist.md`
+
+## Portfolio Case Study
+
+Front Yard Famous can be treated as a polished portfolio product instead of an active business launch.
+
+Problem:
+
+- Local yard sign businesses often rely on crowded, outdated websites.
+- Customers need a clearer way to browse occasions, pricing, and booking options.
+- Operators need a simple workflow for reviewing requests and planning inventory.
+
+Solution:
+
+- A modern public booking site with focused pages instead of one overloaded homepage.
+- A demo admin dashboard for request review, status changes, inventory availability, and package planning.
+- A lightweight API with local demo persistence so the project can be shown without paid infrastructure.
+
+Stack:
+
+- React, TypeScript, Vite, and Tailwind CSS.
+- Node HTTP API using built-in modules.
+- Node test runner for backend route and validation coverage.
+
+Demo features:
+
+- Public pages for home, occasions, gallery, pricing, booking, and FAQ.
+- Booking inquiry form that posts to the API.
+- Seeded admin booking queue.
+- Status changes for New, Reviewing, Confirmed, Declined, and Completed.
+- Inventory availability panel with reserved/open counts.
+- SEO, social metadata, favicon, sitemap, robots, and Vercel route rewrite.
+
+Screenshots to add:
+
+- Homepage first viewport.
+- Booking form confirmation.
+- Admin dashboard with seeded bookings.
+- Inventory availability panel.
 
 ## Version 1 Recommendation
 

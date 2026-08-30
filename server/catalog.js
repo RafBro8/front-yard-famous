@@ -5,6 +5,7 @@ export const inventoryCatalog = [
     category: 'letters',
     status: 'priority',
     quantity: 1,
+    reserved: 1,
   },
   {
     id: 'oversized-number-set',
@@ -12,6 +13,7 @@ export const inventoryCatalog = [
     category: 'numbers',
     status: 'priority',
     quantity: 1,
+    reserved: 1,
   },
   {
     id: 'baby-stork-kit',
@@ -19,6 +21,7 @@ export const inventoryCatalog = [
     category: 'baby',
     status: 'planned',
     quantity: 1,
+    reserved: 0,
   },
   {
     id: 'graduation-icon-kit',
@@ -26,6 +29,7 @@ export const inventoryCatalog = [
     category: 'graduation',
     status: 'planned',
     quantity: 1,
+    reserved: 1,
   },
   {
     id: 'premium-filler-set',
@@ -33,6 +37,7 @@ export const inventoryCatalog = [
     category: 'fillers',
     status: 'priority',
     quantity: 1,
+    reserved: 2,
   },
 ];
 

@@ -186,18 +186,38 @@ Build:
 Commit checkpoint:
 - `chore: prepare production launch`
 
-## Stage 9: Payments and Customer Accounts
+## Stage 9: Demo Product Polish and Admin Workflow
 
-Goal: add payment and accounts only when the business workflow needs them.
+Goal: shift the project into a polished, sellable portfolio demo with a stronger admin workflow.
 
-Recommendation:
-- Add Stripe before customer accounts.
-- Add customer accounts only for repeat booking history, saved event details, self-service changes, or payment receipts.
+Build:
+- Make the admin dashboard feel more complete and premium.
+- Connect the admin dashboard to local/demo API data instead of static mock data.
+- Add seeded demo bookings.
+- Add booking status update interactions.
+- Add inventory availability view with reserved/open counts.
+- Add polished loading, empty, and error states.
+- Add portfolio-ready README content covering problem, solution, stack, demo features, and screenshots to add.
 
 Commit checkpoint:
-- `feat: add payment workflow`
+- `feat: polish demo admin workflow`
 
-## Stage 10: Yard Display Builder
+## Stage 10: Deployable Demo and Case Study
+
+Goal: make the project easy to showcase, review, and sell as a demo product.
+
+Build:
+- Deploy the frontend.
+- Decide whether to deploy the demo API or keep it local-only.
+- Add screenshots or short screen recordings.
+- Add demo instructions and customization notes.
+- Add a portfolio case-study writeup.
+- Optional demo credentials if auth is introduced.
+
+Commit checkpoint:
+- `docs: add demo case study`
+
+## Stage 11: Yard Display Builder
 
 Goal: let customers experiment with available inventory and submit a visual display concept.
 
@@ -213,3 +233,14 @@ Recommendation:
 
 Commit checkpoint:
 - `feat: add yard display builder`
+
+## Stage 12: Payments and Customer Accounts
+
+Goal: add payment and accounts only if the project shifts back toward a real business workflow.
+
+Recommendation:
+- Add Stripe before customer accounts.
+- Add customer accounts only for repeat booking history, saved event details, self-service changes, or payment receipts.
+
+Commit checkpoint:
+- `feat: add payment workflow`

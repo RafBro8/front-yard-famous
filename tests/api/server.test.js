@@ -118,6 +118,67 @@ describe('Front Yard Famous API', () => {
     assert.equal(list.bookings[0].displayMessage, 'Welcome Home Baby Noah');
   });
 
+  it('updates booking request status', async () => {
+    const createResponse = await fetch(`${baseUrl}/api/bookings`, {
+      body: JSON.stringify({
+        ...validPayload,
+        email: 'status@example.com',
+        displayMessage: 'Status Test Booking',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    const created = await createResponse.json();
+
+    const updateResponse = await fetch(`${baseUrl}/api/bookings/${created.id}/status`, {
+      body: JSON.stringify({ status: 'confirmed' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+    });
+    const updated = await updateResponse.json();
+
+    assert.equal(updateResponse.status, 200);
+    assert.equal(updated.booking.id, created.id);
+    assert.equal(updated.booking.status, 'confirmed');
+    assert.ok(updated.booking.updatedAt);
+  });
+
+  it('rejects invalid booking status updates', async () => {
+    const response = await fetch(`${baseUrl}/api/bookings/FYF-9999/status`, {
+      body: JSON.stringify({ status: 'maybe' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+    });
+    const body = await response.json();
+
+    assert.equal(response.status, 400);
+    assert.deepEqual(body, {
+      error: 'Choose a valid booking status.',
+    });
+  });
+
+  it('returns not found when a valid status targets a missing booking', async () => {
+    const response = await fetch(`${baseUrl}/api/bookings/FYF-9999/status`, {
+      body: JSON.stringify({ status: 'confirmed' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+    });
+    const body = await response.json();
+
+    assert.equal(response.status, 404);
+    assert.deepEqual(body, {
+      error: 'Booking request not found.',
+    });
+  });
+
   it('returns starter inventory and package data', async () => {
     const response = await fetch(`${baseUrl}/api/inventory`);
     const body = await response.json();
@@ -125,5 +186,6 @@ describe('Front Yard Famous API', () => {
     assert.equal(response.status, 200);
     assert.ok(body.inventory.length > 0);
     assert.ok(body.packages.length > 0);
+    assert.equal(typeof body.inventory[0].reserved, 'number');
   });
 });
