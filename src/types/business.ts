@@ -126,6 +126,33 @@ export type AdminDashboardData = {
   packages: PackageCatalogItem[];
 };
 
+export type BuilderPieceCategory =
+  | 'letter'
+  | 'number'
+  | 'theme'
+  | 'baby'
+  | 'graduation'
+  | 'filler';
+
+export type BuilderPieceShape = 'rectangle' | 'circle' | 'star' | 'stork' | 'cap';
+
+export type BuilderPieceTemplate = {
+  id: string;
+  label: string;
+  category: BuilderPieceCategory;
+  color: string;
+  textColor: string;
+  shape: BuilderPieceShape;
+};
+
+export type BuilderCanvasPiece = BuilderPieceTemplate & {
+  instanceId: string;
+  x: number;
+  y: number;
+  rotation: number;
+  scale: number;
+};
+
 export type AdminMetric = {
   label: string;
   value: string;

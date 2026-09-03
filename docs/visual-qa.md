@@ -1,6 +1,6 @@
 # Visual QA Notes
 
-Stage 10.5 checked the customer homepage, booking page, and admin dashboard at desktop and mobile widths.
+Stage 10.5 checked the customer homepage, booking page, and admin dashboard at desktop and mobile widths. Stage 11A added the same visual pass for the yard display builder.
 
 ## Viewports
 
@@ -11,6 +11,7 @@ Stage 10.5 checked the customer homepage, booking page, and admin dashboard at d
 
 - `/`
 - `/booking`
+- `/builder`
 - `/admin`
 
 ## Results
@@ -19,6 +20,8 @@ Stage 10.5 checked the customer homepage, booking page, and admin dashboard at d
 - No broken images detected.
 - Route-specific page titles rendered.
 - Homepage hero image loaded on desktop and mobile.
+- Builder canvas loaded on desktop and mobile with six starter pieces.
+- Builder drag interaction moved a selected piece successfully.
 - Admin dashboard loaded seeded API data.
 - Booking and admin pages now expose a visible page `h1`.
 
@@ -26,9 +29,11 @@ Stage 10.5 checked the customer homepage, booking page, and admin dashboard at d
 
 - `docs/screenshots/home-desktop.png`
 - `docs/screenshots/booking-desktop.png`
+- `docs/screenshots/builder-desktop.png`
 - `docs/screenshots/admin-desktop.png`
 - `docs/screenshots/home-mobile.png`
 - `docs/screenshots/booking-mobile.png`
+- `docs/screenshots/builder-mobile.png`
 - `docs/screenshots/admin-mobile.png`
 
 ## Follow-Up Polish

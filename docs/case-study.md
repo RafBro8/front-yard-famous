@@ -14,6 +14,7 @@ The project separates the customer and operator experiences:
 
 - A focused public site with routes for home, occasions, gallery, pricing, booking, and FAQ.
 - A booking inquiry flow that validates customer details and posts to a local API.
+- A frontend-only builder prototype where customers arrange sample yard display pieces.
 - An admin dashboard with seeded demo bookings, status updates, inventory availability, package data, and blackout dates.
 - Launch-ready metadata, sitemap, robots file, favicon, manifest, and Vercel routing configuration.
 
@@ -24,6 +25,7 @@ The project separates the customer and operator experiences:
 - Manual booking confirmation model, which avoids premature payment/account complexity.
 - API-backed admin workflow that demonstrates full-stack thinking.
 - Resettable demo data for portfolio walkthroughs and buyer presentations.
+- Interactive builder prototype for a more memorable product demo.
 
 ## Technical Highlights
 
@@ -35,7 +37,7 @@ The project separates the customer and operator experiences:
 
 ## Demo Screenshots
 
-Captured during Stage 10.5 visual QA:
+Captured during Stage 10.5 and Stage 11A visual QA:
 
 ![Homepage desktop](screenshots/home-desktop.png)
 
@@ -43,16 +45,19 @@ Captured during Stage 10.5 visual QA:
 
 ![Admin desktop](screenshots/admin-desktop.png)
 
+![Builder desktop](screenshots/builder-desktop.png)
+
 ![Homepage mobile](screenshots/home-mobile.png)
 
 ![Booking mobile](screenshots/booking-mobile.png)
 
 ![Admin mobile](screenshots/admin-mobile.png)
 
+![Builder mobile](screenshots/builder-mobile.png)
+
 ## What I Would Add Next
 
 - Hosted demo backend or mocked hosted API responses.
-- Screenshot gallery in the README.
 - Playwright browser smoke tests.
 - Optional admin authentication for a more production-like demo.
-- Yard display builder with draggable inventory pieces.
+- Booking integration for saved builder layouts.

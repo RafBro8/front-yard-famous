@@ -250,6 +250,51 @@ Recommendation:
 Commit checkpoint:
 - `feat: add yard display builder`
 
+### Stage 11A: Builder Prototype
+
+Goal: prove the core customer-facing builder interaction without backend integration.
+
+Build:
+- Add `/builder`.
+- Static yard canvas.
+- Draggable sample pieces.
+- Add-piece controls from a sample palette.
+- Basic arrange presets.
+- Selected-piece size and tilt controls.
+- Remove selected piece.
+- Reset layout.
+- No backend yet.
+
+Commit checkpoint:
+- `feat: add yard display builder prototype`
+
+### Stage 11B: Builder Booking Integration
+
+Goal: attach customer layouts to booking requests.
+
+Build:
+- Save layout JSON in frontend state.
+- Attach layout summary to booking request payload.
+- Store builder layout through the API.
+- Show submitted layout details in admin.
+
+Commit checkpoint:
+- `feat: attach builder layouts to bookings`
+
+### Stage 11C: Builder Polish
+
+Goal: make the builder feel portfolio-ready and closer to a real product.
+
+Build:
+- Mobile-friendly builder controls.
+- Better sample inventory categories.
+- Realistic sign artwork.
+- Exportable preview image.
+- Improved admin preview of submitted concepts.
+
+Commit checkpoint:
+- `feat: polish yard display builder`
+
 ## Stage 12: Payments and Customer Accounts
 
 Goal: add payment and accounts only if the project shifts back toward a real business workflow.

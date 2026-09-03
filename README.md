@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 10/10.5 deployable demo, case study, and visual QA**
+Current stage: **Stage 11A yard display builder prototype**
 
-The current milestone is a showcase-ready demo package with resettable sample data, case-study documentation, deployment guidance, and visual QA polish.
+The current milestone is a frontend-only yard display builder prototype with sample pieces, a static yard canvas, drag controls, arrange presets, and reset behavior.
 
 ## Tech Stack
 
@@ -76,6 +76,7 @@ Public routes:
 - `/occasions`
 - `/gallery`
 - `/pricing`
+- `/builder`
 - `/booking`
 - `/faq`
 - `/admin`
@@ -190,26 +191,35 @@ Stack:
 Demo features:
 
 - Public pages for home, occasions, gallery, pricing, booking, and FAQ.
+- Frontend-only yard display builder prototype.
 - Booking inquiry form that posts to the API.
 - Seeded admin booking queue.
 - Status changes for New, Reviewing, Confirmed, Declined, and Completed.
 - Inventory availability panel with reserved/open counts.
 - SEO, social metadata, favicon, sitemap, robots, and Vercel route rewrite.
 
-Screenshots to add:
+Screenshots:
 
 - `docs/screenshots/home-desktop.png`
 - `docs/screenshots/booking-desktop.png`
 - `docs/screenshots/admin-desktop.png`
+- `docs/screenshots/builder-desktop.png`
 - `docs/screenshots/home-mobile.png`
 - `docs/screenshots/booking-mobile.png`
 - `docs/screenshots/admin-mobile.png`
+- `docs/screenshots/builder-mobile.png`
 
 ## Demo Package Direction
 
 Stage 10 packages the project for portfolio review or resale. It adds a guided demo flow, resettable seeded data, a fuller case study, buyer customization notes, and launch/deployment references.
 
 Stage 10.5 adds visual QA and polish checks across the customer homepage, booking page, and admin dashboard so the project is ready for screenshots and walkthroughs.
+
+## Builder Direction
+
+Stage 11A adds `/builder` as a frontend-only prototype where customers can add sample yard sign pieces, drag them on a static yard canvas, use simple arrange presets, adjust size and tilt, remove selected pieces, and reset the display.
+
+Later builder stages can attach the layout JSON to a booking request, show the submitted concept in admin, and replace sample shapes with real inventory artwork.
 
 ## Version 1 Recommendation
 

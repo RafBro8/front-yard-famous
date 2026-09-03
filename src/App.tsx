@@ -13,12 +13,21 @@ import {
   packages,
   setupWindows,
 } from './data/siteContent';
+import { BuilderPage } from './pages/BuilderPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import type { BookingErrors, BookingFormState, BookingSubmissionResponse } from './types/business';
 
-type PublicPath = '/' | '/occasions' | '/gallery' | '/pricing' | '/booking' | '/faq';
+type PublicPath = '/' | '/occasions' | '/gallery' | '/pricing' | '/builder' | '/booking' | '/faq';
 
-const publicPaths = new Set<PublicPath>(['/', '/occasions', '/gallery', '/pricing', '/booking', '/faq']);
+const publicPaths = new Set<PublicPath>([
+  '/',
+  '/occasions',
+  '/gallery',
+  '/pricing',
+  '/builder',
+  '/booking',
+  '/faq',
+]);
 const siteUrl = 'https://fyf.com';
 const socialImagePath = '/images/hero-birthday-display.png';
 
@@ -46,6 +55,12 @@ const publicPageMetadata: Record<PublicPath, PageMetadataDefinition> = {
     description:
       'Review simple starting packages and custom yard sign setup options from Front Yard Famous.',
     path: '/pricing',
+  },
+  '/builder': {
+    title: 'Yard Display Builder | Front Yard Famous',
+    description:
+      'Prototype a Front Yard Famous yard display by arranging sample letters, numbers, icons, and fillers on a yard canvas.',
+    path: '/builder',
   },
   '/booking': {
     title: 'Request a Date | Front Yard Famous',
@@ -156,6 +171,7 @@ function PublicSite() {
           <BookingPrompt />
         </>
       ) : null}
+      {currentPath === '/builder' ? <BuilderPage /> : null}
       {currentPath === '/booking' ? (
         <BookingSection
           errors={errors}

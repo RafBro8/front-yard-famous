@@ -15,6 +15,7 @@
   - `/occasions`
   - `/gallery`
   - `/pricing`
+  - `/builder`
   - `/booking`
   - `/faq`
   - `/admin`
