@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getAdminDashboardData, updateBookingStatus } from '../api/adminDashboard';
+import { BuilderYardScene } from '../components/BuilderYardScene';
 import { blackoutDates } from '../data/adminContent';
 import type {
   AdminDashboardData,
@@ -352,6 +353,9 @@ function BuilderLayoutAdminPreview({ layout }: { layout?: BuilderBookingLayout |
             {piece.label}
           </span>
         ))}
+      </div>
+      <div className="mt-4">
+        <BuilderYardScene compact layout={layout.pieces} />
       </div>
     </div>
   );

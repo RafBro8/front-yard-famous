@@ -1,6 +1,6 @@
 # Visual QA Notes
 
-Stage 10.5 checked the customer homepage, booking page, and admin dashboard at desktop and mobile widths. Stage 11A added the same visual pass for the yard display builder. Stage 11B smoke-tested the builder-to-booking handoff and admin builder preview.
+Stage 10.5 checked the customer homepage, booking page, and admin dashboard at desktop and mobile widths. Stage 11A added the same visual pass for the yard display builder. Stage 11B smoke-tested the builder-to-booking handoff and admin builder preview. Stage 11C refreshed builder/admin previews after the polished yard-scene and SVG-export work.
 
 ## Viewports
 
@@ -24,6 +24,7 @@ Stage 10.5 checked the customer homepage, booking page, and admin dashboard at d
 - Builder drag interaction moved a selected piece successfully.
 - Builder layout handoff showed the attached concept summary on `/booking`.
 - Admin preview rendered the seeded builder concept through a temp-backed API.
+- Builder inventory filters, SVG export control, and shared yard preview rendered on desktop and mobile.
 - Admin dashboard loaded seeded API data.
 - Booking and admin pages now expose a visible page `h1`.
 

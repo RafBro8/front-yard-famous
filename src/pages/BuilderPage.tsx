@@ -1,7 +1,9 @@
-import { PointerEvent, RefObject, useMemo, useRef, useState } from 'react';
-import { builderPieces, initialBuilderLayout } from '../data/builderContent';
-import { saveBuilderLayout } from '../lib/builderLayoutStorage';
-import type { BuilderCanvasPiece, BuilderPieceShape, BuilderPieceTemplate } from '../types/business';
+import { type PointerEvent, type RefObject, useMemo, useRef, useState } from 'react';
+import { BuilderYardScene } from '../components/BuilderYardScene';
+import { builderPieceFilters, builderPieces, initialBuilderLayout } from '../data/builderContent';
+import { downloadBuilderPreview } from '../lib/builderPreviewExport';
+import { buildBuilderLayoutSummary, saveBuilderLayout } from '../lib/builderLayoutStorage';
+import type { BuilderCanvasPiece, BuilderPieceCategory, BuilderPieceTemplate } from '../types/business';
 
 type DragState = {
   instanceId: string;
@@ -14,17 +16,28 @@ const arrangementPresets = [
 ] as const;
 
 type ArrangementPreset = (typeof arrangementPresets)[number]['id'];
+type BuilderFilter = (typeof builderPieceFilters)[number]['id'];
 
 function BuilderPage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<DragState | null>(null);
   const [layout, setLayout] = useState<BuilderCanvasPiece[]>(initialBuilderLayout);
   const [selectedId, setSelectedId] = useState(initialBuilderLayout[0]?.instanceId || '');
+  const [activeFilter, setActiveFilter] = useState<BuilderFilter>('all');
+  const [exportMessage, setExportMessage] = useState('');
 
   const selectedPiece = useMemo(
     () => layout.find((piece) => piece.instanceId === selectedId) || null,
     [layout, selectedId],
   );
+  const filteredPieces = useMemo(
+    () =>
+      activeFilter === 'all'
+        ? builderPieces
+        : builderPieces.filter((piece) => piece.category === activeFilter),
+    [activeFilter],
+  );
+  const layoutSummary = useMemo(() => buildBuilderLayoutSummary(layout), [layout]);
 
   function addPiece(template: BuilderPieceTemplate) {
     const count = layout.filter((piece) => piece.id === template.id).length;
@@ -39,6 +52,7 @@ function BuilderPage() {
 
     setLayout((current) => [...current, nextPiece]);
     setSelectedId(nextPiece.instanceId);
+    setExportMessage('');
   }
 
   function removeSelectedPiece() {
@@ -48,6 +62,7 @@ function BuilderPage() {
 
     setLayout((current) => current.filter((piece) => piece.instanceId !== selectedPiece.instanceId));
     setSelectedId(layout.find((piece) => piece.instanceId !== selectedPiece.instanceId)?.instanceId || '');
+    setExportMessage('');
   }
 
   function updateSelectedPiece(updates: Partial<Pick<BuilderCanvasPiece, 'rotation' | 'scale'>>) {
@@ -60,6 +75,7 @@ function BuilderPage() {
         piece.instanceId === selectedPiece.instanceId ? { ...piece, ...updates } : piece,
       ),
     );
+    setExportMessage('');
   }
 
   function handlePiecePointerDown(
@@ -69,6 +85,7 @@ function BuilderPage() {
     event.currentTarget.setPointerCapture(event.pointerId);
     setSelectedId(piece.instanceId);
     dragStateRef.current = { instanceId: piece.instanceId };
+    setExportMessage('');
   }
 
   function handlePiecePointerMove(event: PointerEvent<HTMLButtonElement>) {
@@ -121,11 +138,13 @@ function BuilderPage() {
         };
       }),
     );
+    setExportMessage('');
   }
 
   function resetLayout() {
     setLayout(initialBuilderLayout);
     setSelectedId(initialBuilderLayout[0]?.instanceId || '');
+    setExportMessage('');
   }
 
   function useLayoutInBooking() {
@@ -133,13 +152,24 @@ function BuilderPage() {
     window.location.href = '/booking';
   }
 
+  function exportPreview() {
+    downloadBuilderPreview(layout);
+    setExportMessage('Preview SVG downloaded.');
+  }
+
   return (
     <section className="bg-linen">
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.36fr_0.64fr] lg:items-start">
+      <div className="mx-auto grid min-w-0 max-w-6xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[0.36fr_0.64fr] lg:items-start lg:py-12">
         <BuilderSidebar
+          activeFilter={activeFilter}
+          exportMessage={exportMessage}
+          filteredPieces={filteredPieces}
           layout={layout}
+          layoutSummary={layoutSummary}
           onAddPiece={addPiece}
           onArrange={applyArrangement}
+          onExportPreview={exportPreview}
+          onFilterChange={setActiveFilter}
           onRemoveSelected={removeSelectedPiece}
           onReset={resetLayout}
           onUseLayoutInBooking={useLayoutInBooking}
@@ -149,6 +179,7 @@ function BuilderPage() {
         <BuilderCanvas
           canvasRef={canvasRef}
           layout={layout}
+          layoutSummary={layoutSummary}
           onPointerDown={handlePiecePointerDown}
           onPointerMove={handlePiecePointerMove}
           onPointerUp={stopDragging}
@@ -160,18 +191,30 @@ function BuilderPage() {
 }
 
 function BuilderSidebar({
+  activeFilter,
+  exportMessage,
+  filteredPieces,
   layout,
+  layoutSummary,
   onAddPiece,
   onArrange,
+  onExportPreview,
+  onFilterChange,
   onRemoveSelected,
   onReset,
   onUseLayoutInBooking,
   onUpdateSelected,
   selectedPiece,
 }: {
+  activeFilter: BuilderFilter;
+  exportMessage: string;
+  filteredPieces: BuilderPieceTemplate[];
   layout: BuilderCanvasPiece[];
+  layoutSummary: string;
   onAddPiece: (template: BuilderPieceTemplate) => void;
   onArrange: (preset: ArrangementPreset) => void;
+  onExportPreview: () => void;
+  onFilterChange: (filter: BuilderFilter) => void;
   onRemoveSelected: () => void;
   onReset: () => void;
   onUseLayoutInBooking: () => void;
@@ -179,30 +222,62 @@ function BuilderSidebar({
   selectedPiece: BuilderCanvasPiece | null;
 }) {
   return (
-    <aside className="space-y-5">
+    <aside className="min-w-0 space-y-5 lg:sticky lg:top-6">
       <div>
         <p className="text-sm font-semibold uppercase text-lawn">Display builder</p>
         <h1 className="mt-3 font-display text-4xl font-semibold leading-tight text-forest">
-          Sketch a yard setup with sample inventory.
+          Design a yard setup customers can actually send.
         </h1>
         <p className="mt-4 leading-7 text-ink/68">
-          Add pieces, drag them around the yard, try quick arrangements, and send the
-          layout into the booking request when the concept feels right.
+          Arrange sample signs, preview the setup, export a shareable SVG, or attach
+          the concept to a booking request for admin review.
         </p>
       </div>
 
       <section className="border border-ink/10 bg-white p-5">
-        <h2 className="font-display text-2xl font-semibold text-forest">Sample pieces</h2>
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div>
+            <h2 className="font-display text-2xl font-semibold text-forest">Inventory pieces</h2>
+            <p className="mt-1 text-sm text-ink/52">{filteredPieces.length} available samples</p>
+          </div>
+          <span className="bg-cream px-3 py-1 text-xs font-semibold text-lawn">
+            {layout.length} placed
+          </span>
+        </div>
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+          {builderPieceFilters.map((filter) => (
+            <button
+              key={filter.id}
+              className={`shrink-0 border px-3 py-2 text-sm font-semibold transition ${
+                activeFilter === filter.id
+                  ? 'border-lawn bg-mint text-lawn'
+                  : 'border-ink/10 bg-cream text-ink/62 hover:border-lawn hover:text-lawn'
+              }`}
+              onClick={() => onFilterChange(filter.id)}
+              type="button"
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
-          {builderPieces.map((piece) => (
+          {filteredPieces.map((piece) => (
             <button
               key={piece.id}
               className="border border-ink/10 bg-cream px-3 py-3 text-left text-sm font-semibold text-ink transition hover:border-lawn hover:text-lawn"
               onClick={() => onAddPiece(piece)}
               type="button"
             >
-              <span className="block">{piece.label}</span>
-              <span className="mt-1 block text-xs capitalize text-ink/48">{piece.category}</span>
+              <span className="flex items-center gap-2">
+                <span
+                  className="h-3 w-3 border border-ink/10"
+                  style={{ backgroundColor: piece.color }}
+                />
+                <span className="block">{piece.label}</span>
+              </span>
+              <span className="mt-1 block text-xs capitalize text-ink/48">
+                {formatCategory(piece.category)}
+              </span>
             </button>
           ))}
         </div>
@@ -210,7 +285,7 @@ function BuilderSidebar({
 
       <section className="border border-ink/10 bg-white p-5">
         <h2 className="font-display text-2xl font-semibold text-forest">Arrange</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
           {arrangementPresets.map((preset) => (
             <button
               key={preset.id}
@@ -275,17 +350,26 @@ function BuilderSidebar({
 
       <section className="border border-ink/10 bg-forest p-5 text-white">
         <h2 className="font-display text-2xl font-semibold">Layout summary</h2>
-        <p className="mt-3 text-sm leading-6 text-white/68">
-          {layout.length} pieces on canvas. Save the current setup to include the layout
-          summary with the booking request.
-        </p>
-        <button
-          className="mt-5 w-full bg-butter px-4 py-3 text-sm font-semibold text-forest transition hover:bg-white"
-          onClick={onUseLayoutInBooking}
-          type="button"
-        >
-          Use this layout in booking
-        </button>
+        <p className="mt-3 text-sm leading-6 text-white/70">{layoutSummary}</p>
+        <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+          <button
+            className="bg-butter px-4 py-3 text-sm font-semibold text-forest transition hover:bg-white"
+            onClick={onUseLayoutInBooking}
+            type="button"
+          >
+            Use this layout in booking
+          </button>
+          <button
+            className="border border-white/18 bg-white/8 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-forest"
+            onClick={onExportPreview}
+            type="button"
+          >
+            Download preview SVG
+          </button>
+        </div>
+        {exportMessage ? (
+          <p className="mt-3 text-sm font-semibold text-butter">{exportMessage}</p>
+        ) : null}
       </section>
     </aside>
   );
@@ -294,6 +378,7 @@ function BuilderSidebar({
 function BuilderCanvas({
   canvasRef,
   layout,
+  layoutSummary,
   onPointerDown,
   onPointerMove,
   onPointerUp,
@@ -301,97 +386,40 @@ function BuilderCanvas({
 }: {
   canvasRef: RefObject<HTMLDivElement | null>;
   layout: BuilderCanvasPiece[];
+  layoutSummary: string;
   onPointerDown: (event: PointerEvent<HTMLButtonElement>, piece: BuilderCanvasPiece) => void;
   onPointerMove: (event: PointerEvent<HTMLButtonElement>) => void;
   onPointerUp: () => void;
   selectedId: string;
 }) {
   return (
-    <div className="lg:sticky lg:top-6">
-      <div
-        ref={canvasRef}
-        className="relative min-h-[440px] overflow-hidden border border-ink/10 bg-[#dff4e8] shadow-soft sm:min-h-[560px]"
-      >
-        <div className="absolute inset-x-0 bottom-0 h-[48%] bg-[#4f9a68]" />
-        <div className="absolute inset-x-0 bottom-[44%] h-[9%] bg-[#246b45]" />
-        <div className="absolute left-[8%] top-[12%] h-14 w-28 border border-ink/10 bg-white/62" />
-        <div className="absolute right-[10%] top-[10%] h-20 w-36 border border-ink/10 bg-white/72" />
-        <div className="absolute bottom-[18%] left-[7%] right-[7%] h-px bg-white/40" />
-
-        {layout.map((piece) => (
-          <BuilderCanvasPieceView
-            key={piece.instanceId}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            piece={piece}
-            selected={selectedId === piece.instanceId}
-          />
-        ))}
+    <div className="min-w-0">
+      <div className="mb-4 grid gap-3 border border-ink/10 bg-white p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+        <p className="text-sm leading-6 text-ink/62">{layoutSummary}</p>
+        <span className="text-sm font-semibold text-lawn">Drag pieces on the yard</span>
       </div>
+      <BuilderYardScene
+        canvasRef={canvasRef}
+        layout={layout}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        selectedId={selectedId}
+      />
       <p className="mt-3 text-sm leading-6 text-ink/58">
-        Drag pieces inside the yard. This prototype uses sample shapes so the workflow
-        can be tested before real inventory artwork is added.
+        This is still sample artwork, but the saved layout now behaves like real product
+        data for booking and admin review.
       </p>
     </div>
   );
 }
 
-function BuilderCanvasPieceView({
-  onPointerDown,
-  onPointerMove,
-  onPointerUp,
-  piece,
-  selected,
-}: {
-  onPointerDown: (event: PointerEvent<HTMLButtonElement>, piece: BuilderCanvasPiece) => void;
-  onPointerMove: (event: PointerEvent<HTMLButtonElement>) => void;
-  onPointerUp: () => void;
-  piece: BuilderCanvasPiece;
-  selected: boolean;
-}) {
-  return (
-    <button
-      aria-label={`Move ${piece.label}`}
-      className={`absolute touch-none select-none font-display font-semibold shadow-soft transition ${
-        selected ? 'ring-4 ring-coral/45' : 'hover:ring-2 hover:ring-white/80'
-      } ${getPieceShapeClasses(piece.shape)}`}
-      onPointerCancel={onPointerUp}
-      onPointerDown={(event) => onPointerDown(event, piece)}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      style={{
-        backgroundColor: piece.color,
-        color: piece.textColor,
-        left: `${piece.x}%`,
-        top: `${piece.y}%`,
-        transform: `translate(-50%, -50%) rotate(${piece.rotation}deg) scale(${piece.scale})`,
-      }}
-      type="button"
-    >
-      {piece.shape === 'star' ? '★' : piece.label}
-    </button>
-  );
-}
-
-function getPieceShapeClasses(shape: BuilderPieceShape) {
-  if (shape === 'circle') {
-    return 'flex h-20 w-20 items-center justify-center rounded-full text-4xl';
+function formatCategory(category: BuilderPieceCategory) {
+  if (category === 'letter') {
+    return 'message';
   }
 
-  if (shape === 'star') {
-    return 'flex h-16 w-16 items-center justify-center bg-transparent text-5xl shadow-none';
-  }
-
-  if (shape === 'stork') {
-    return 'flex h-28 w-20 items-center justify-center rounded-t-full px-3 text-sm';
-  }
-
-  if (shape === 'cap') {
-    return 'flex h-14 w-24 items-center justify-center [clip-path:polygon(50%_0,100%_35%,50%_70%,0_35%)] text-sm';
-  }
-
-  return 'min-w-24 px-5 py-4 text-xl';
+  return category;
 }
 
 function clamp(value: number, min: number, max: number) {

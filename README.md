@@ -4,9 +4,9 @@ Modern booking and showcase website for Front Yard Famous, a yard greeting and c
 
 ## Stage
 
-Current stage: **Stage 11B builder booking integration**
+Current stage: **Stage 11C builder polish**
 
-The current milestone attaches saved builder layouts to booking requests, stores them through the API, and shows builder concept summaries in the admin workflow.
+The current milestone polishes the yard display builder with categorized inventory controls, reusable visual yard previews, SVG preview export, and a richer admin layout preview.
 
 ## Tech Stack
 
@@ -191,7 +191,7 @@ Stack:
 Demo features:
 
 - Public pages for home, occasions, gallery, pricing, booking, and FAQ.
-- Yard display builder with booking handoff and admin layout preview.
+- Yard display builder with categorized sample inventory, booking handoff, SVG preview export, and admin layout preview.
 - Booking inquiry form that posts to the API.
 - Seeded admin booking queue.
 - Status changes for New, Reviewing, Confirmed, Declined, and Completed.
@@ -219,7 +219,7 @@ Stage 10.5 adds visual QA and polish checks across the customer homepage, bookin
 
 Stage 11A adds `/builder` as a frontend-only prototype where customers can add sample yard sign pieces, drag them on a static yard canvas, use simple arrange presets, adjust size and tilt, remove selected pieces, and reset the display.
 
-Stage 11B attaches the layout JSON to booking requests and shows submitted concepts in admin. Stage 11C can replace sample shapes with real inventory artwork, improve mobile controls, and add exportable preview images.
+Stage 11B attaches the layout JSON to booking requests and shows submitted concepts in admin. Stage 11C adds a reusable yard-scene renderer, categorized builder controls, richer sample inventory, SVG preview export, and a stronger admin mini-preview.
 
 ## Version 1 Recommendation
 

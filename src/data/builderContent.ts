@@ -1,5 +1,15 @@
 import type { BuilderCanvasPiece, BuilderPieceTemplate } from '../types/business';
 
+export const builderPieceFilters = [
+  { id: 'all', label: 'All' },
+  { id: 'letter', label: 'Messages' },
+  { id: 'number', label: 'Numbers' },
+  { id: 'theme', label: 'Themes' },
+  { id: 'baby', label: 'Baby' },
+  { id: 'graduation', label: 'Grad' },
+  { id: 'filler', label: 'Fillers' },
+] as const;
+
 export const builderPieces: BuilderPieceTemplate[] = [
   {
     id: 'happy',
@@ -42,6 +52,22 @@ export const builderPieces: BuilderPieceTemplate[] = [
     shape: 'rectangle',
   },
   {
+    id: 'cheers',
+    label: 'CHEERS',
+    category: 'theme',
+    color: '#fffdf8',
+    textColor: '#123526',
+    shape: 'rectangle',
+  },
+  {
+    id: 'welcome',
+    label: 'WELCOME',
+    category: 'baby',
+    color: '#cbe7f8',
+    textColor: '#17211b',
+    shape: 'rectangle',
+  },
+  {
     id: 'stork',
     label: 'Stork',
     category: 'baby',
@@ -50,12 +76,36 @@ export const builderPieces: BuilderPieceTemplate[] = [
     shape: 'stork',
   },
   {
+    id: 'baby',
+    label: 'BABY',
+    category: 'baby',
+    color: '#fff8ec',
+    textColor: '#246b45',
+    shape: 'rectangle',
+  },
+  {
     id: 'grad-cap',
     label: 'Cap',
     category: 'graduation',
     color: '#17211b',
     textColor: '#fffdf8',
     shape: 'cap',
+  },
+  {
+    id: 'class-year',
+    label: '2027',
+    category: 'graduation',
+    color: '#246b45',
+    textColor: '#fffdf8',
+    shape: 'rectangle',
+  },
+  {
+    id: 'sparkle',
+    label: 'Sparkle',
+    category: 'filler',
+    color: '#d9d0ff',
+    textColor: '#17211b',
+    shape: 'star',
   },
   {
     id: 'star',
@@ -69,7 +119,7 @@ export const builderPieces: BuilderPieceTemplate[] = [
 
 export const initialBuilderLayout: BuilderCanvasPiece[] = [
   {
-    ...builderPieces[0],
+    ...findBuilderPiece('happy'),
     instanceId: 'layout-happy',
     x: 18,
     y: 30,
@@ -77,7 +127,7 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 1,
   },
   {
-    ...builderPieces[1],
+    ...findBuilderPiece('birthday'),
     instanceId: 'layout-birthday',
     x: 44,
     y: 30,
@@ -85,7 +135,7 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 1,
   },
   {
-    ...builderPieces[2],
+    ...findBuilderPiece('name'),
     instanceId: 'layout-name',
     x: 38,
     y: 53,
@@ -93,7 +143,7 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 1.1,
   },
   {
-    ...builderPieces[3],
+    ...findBuilderPiece('age'),
     instanceId: 'layout-age',
     x: 67,
     y: 50,
@@ -101,7 +151,7 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 1.18,
   },
   {
-    ...builderPieces[7],
+    ...findBuilderPiece('star'),
     instanceId: 'layout-star-left',
     x: 26,
     y: 55,
@@ -109,7 +159,7 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 0.82,
   },
   {
-    ...builderPieces[7],
+    ...findBuilderPiece('star'),
     instanceId: 'layout-star-right',
     x: 79,
     y: 35,
@@ -117,3 +167,13 @@ export const initialBuilderLayout: BuilderCanvasPiece[] = [
     scale: 0.78,
   },
 ];
+
+function findBuilderPiece(id: string) {
+  const piece = builderPieces.find((item) => item.id === id);
+
+  if (!piece) {
+    throw new Error(`Missing builder piece: ${id}`);
+  }
+
+  return piece;
+}

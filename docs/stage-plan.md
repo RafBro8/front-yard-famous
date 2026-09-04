@@ -289,9 +289,10 @@ Goal: make the builder feel portfolio-ready and closer to a real product.
 Build:
 - Mobile-friendly builder controls.
 - Better sample inventory categories.
-- Realistic sign artwork.
-- Exportable preview image.
+- More realistic sign artwork.
+- Exportable SVG preview image.
 - Improved admin preview of submitted concepts.
+- Shared yard-scene renderer for customer and admin screens.
 
 Commit checkpoint:
 - `feat: polish yard display builder`

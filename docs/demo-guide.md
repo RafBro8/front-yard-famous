@@ -37,9 +37,9 @@ The reset writes demo bookings to `.data/booking-requests.json`.
 
 1. Open `/` and show the modern customer-facing homepage.
 2. Move through `/occasions`, `/gallery`, and `/pricing` to show the cleaner page structure.
-3. Open `/builder`, add sample pieces, drag them on the yard canvas, and use the layout in booking.
-4. Open `/booking`, confirm the builder concept summary is attached, submit a sample request, and note the generated request ID.
-5. Open `/admin` and show the booking queue, builder concept preview, status controls, inventory availability, packages, and blackout dates.
+3. Open `/builder`, filter the sample inventory, add pieces, drag them on the yard canvas, and download the SVG preview.
+4. Use the layout in booking, then confirm the builder concept summary is attached on `/booking`.
+5. Submit a sample request, open `/admin`, and show the booking queue, visual builder preview, status controls, inventory availability, packages, and blackout dates.
 6. Change a booking status and show the success message.
 7. Run `npm run demo:reset` to restore the original seeded queue before another walkthrough.
 

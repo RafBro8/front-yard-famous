@@ -68,10 +68,24 @@ export function buildBuilderLayoutSummary(layout: BuilderCanvasPiece[]) {
   }, {});
 
   const categorySummary = Object.entries(counts)
-    .map(([category, count]) => `${count} ${category}${count === 1 ? '' : 's'}`)
+    .map(([category, count]) => `${count} ${formatCategoryLabel(category, count)}`)
     .join(', ');
 
   return `${layout.length} pieces: ${categorySummary}.`;
+}
+
+function formatCategoryLabel(category: string, count: number) {
+  const labels: Record<string, [string, string]> = {
+    baby: ['baby', 'baby'],
+    filler: ['filler', 'fillers'],
+    graduation: ['graduation', 'graduation'],
+    letter: ['message', 'messages'],
+    number: ['number', 'numbers'],
+    theme: ['theme', 'themes'],
+  };
+  const [single, plural] = labels[category] || [category, `${category}s`];
+
+  return count === 1 ? single : plural;
 }
 
 function normalizeBuilderLayout(value: unknown): BuilderBookingLayout | null {
