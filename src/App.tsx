@@ -14,8 +14,15 @@ import {
   setupWindows,
 } from './data/siteContent';
 import { BuilderPage } from './pages/BuilderPage';
+import { clearSavedBuilderLayout, getSavedBuilderLayout } from './lib/builderLayoutStorage';
 import { AdminDashboard } from './pages/AdminDashboard';
-import type { BookingErrors, BookingFormState, BookingSubmissionResponse } from './types/business';
+import type {
+  BookingErrors,
+  BookingFormState,
+  BookingRequestPayload,
+  BookingSubmissionResponse,
+  BuilderBookingLayout,
+} from './types/business';
 
 type PublicPath = '/' | '/occasions' | '/gallery' | '/pricing' | '/builder' | '/booking' | '/faq';
 
@@ -100,11 +107,20 @@ function PublicSite() {
   const currentPath = getPublicPath(window.location.pathname);
   const [bookingForm, setBookingForm] = useState(initialBookingForm);
   const [errors, setErrors] = useState<BookingErrors>({});
-  const [submittedRequest, setSubmittedRequest] = useState<BookingFormState | null>(null);
+  const [submittedRequest, setSubmittedRequest] = useState<BookingRequestPayload | null>(null);
+  const [builderLayout, setBuilderLayout] = useState<BuilderBookingLayout | null>(() =>
+    getSavedBuilderLayout(),
+  );
   const [submission, setSubmission] = useState<BookingSubmissionState>({
     status: 'idle',
   });
   const today = useMemo(getTodayInputValue, []);
+
+  useEffect(() => {
+    if (currentPath === '/booking') {
+      setBuilderLayout(getSavedBuilderLayout());
+    }
+  }, [currentPath]);
 
   function updateBookingField(
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
@@ -139,8 +155,13 @@ function PublicSite() {
     setSubmission({ status: 'submitting' });
 
     try {
-      const response = await submitBookingRequest(bookingForm);
-      setSubmittedRequest(bookingForm);
+      const bookingPayload: BookingRequestPayload = {
+        ...bookingForm,
+        builderLayout,
+      };
+      const response = await submitBookingRequest(bookingPayload);
+      setSubmittedRequest(bookingPayload);
+      clearSavedBuilderLayout();
       setSubmission({ response, status: 'success' });
     } catch (error) {
       setSubmittedRequest(null);
@@ -156,6 +177,13 @@ function PublicSite() {
     setErrors({});
     setSubmittedRequest(null);
     setSubmission({ status: 'idle' });
+    clearSavedBuilderLayout();
+    setBuilderLayout(null);
+  }
+
+  function clearBuilderLayout() {
+    clearSavedBuilderLayout();
+    setBuilderLayout(null);
   }
 
   return (
@@ -174,10 +202,12 @@ function PublicSite() {
       {currentPath === '/builder' ? <BuilderPage /> : null}
       {currentPath === '/booking' ? (
         <BookingSection
+          builderLayout={builderLayout}
           errors={errors}
           form={bookingForm}
           minDate={today}
           onChange={updateBookingField}
+          onClearBuilderLayout={clearBuilderLayout}
           onReset={resetBookingForm}
           onSubmit={handleBookingSubmit}
           submission={submission}
@@ -571,21 +601,25 @@ function PricingSection() {
 }
 
 type BookingSectionProps = {
+  builderLayout: BuilderBookingLayout | null;
   errors: BookingErrors;
   form: BookingFormState;
   minDate: string;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  onClearBuilderLayout: () => void;
   onReset: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   submission: BookingSubmissionState;
-  submittedRequest: BookingFormState | null;
+  submittedRequest: BookingRequestPayload | null;
 };
 
 function BookingSection({
+  builderLayout,
   errors,
   form,
   minDate,
   onChange,
+  onClearBuilderLayout,
   onReset,
   onSubmit,
   submission,
@@ -642,6 +676,11 @@ function BookingSection({
                     confirmed.
                   </p>
                 </div>
+
+                <BuilderLayoutNotice
+                  builderLayout={builderLayout}
+                  onClearBuilderLayout={onClearBuilderLayout}
+                />
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field
@@ -774,8 +813,71 @@ function BookingSection({
   );
 }
 
+function BuilderLayoutNotice({
+  builderLayout,
+  onClearBuilderLayout,
+}: {
+  builderLayout: BuilderBookingLayout | null;
+  onClearBuilderLayout: () => void;
+}) {
+  if (!builderLayout) {
+    return (
+      <div className="border border-ink/10 bg-cream p-5">
+        <p className="text-sm font-semibold text-lawn">Optional builder concept</p>
+        <p className="mt-2 text-sm leading-6 text-ink/62">
+          Want to sketch the display first? Use the builder, then return here with the
+          layout attached to this request.
+        </p>
+        <a
+          className="mt-4 inline-block bg-forest px-4 py-2 text-sm font-semibold text-white transition hover:bg-lawn"
+          href="/builder"
+        >
+          Open builder
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border border-lawn/20 bg-mint p-5">
+      <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
+        <div>
+          <p className="text-sm font-semibold text-lawn">Builder concept attached</p>
+          <h3 className="mt-2 font-display text-2xl font-semibold text-forest">
+            {builderLayout.summary}
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-ink/62">
+            This layout will be saved with the booking request for admin review.
+          </p>
+        </div>
+        <div className="flex gap-2 sm:justify-end">
+          <a
+            className="border border-ink/12 bg-white px-3 py-2 text-sm font-semibold text-ink/72 transition hover:border-lawn hover:text-lawn"
+            href="/builder"
+          >
+            Edit
+          </a>
+          <button
+            className="border border-coral/25 bg-white px-3 py-2 text-sm font-semibold text-coral transition hover:bg-coral hover:text-white"
+            onClick={onClearBuilderLayout}
+            type="button"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {builderLayout.pieces.slice(0, 8).map((piece) => (
+          <span key={piece.instanceId} className="border border-white/60 bg-white/70 px-3 py-1 text-xs font-semibold text-ink/62">
+            {piece.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 type BookingConfirmationProps = {
-  request: BookingFormState;
+  request: BookingRequestPayload;
   response: BookingSubmissionResponse | null;
   onReset: () => void;
 };
@@ -790,6 +892,7 @@ function BookingConfirmation({ request, response, onReset }: BookingConfirmation
     ['Location', request.serviceArea],
     ['Message', request.displayMessage],
     ['Theme notes', request.themeNotes || 'No notes added'],
+    ...(request.builderLayout ? [['Builder layout', request.builderLayout.summary]] : []),
   ];
 
   return (

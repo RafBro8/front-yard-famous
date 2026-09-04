@@ -1,9 +1,9 @@
-import type { BookingFormState, BookingSubmissionResponse } from '../types/business';
+import type { BookingRequestPayload, BookingSubmissionResponse } from '../types/business';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
 export async function submitBookingRequest(
-  payload: BookingFormState,
+  payload: BookingRequestPayload,
 ): Promise<BookingSubmissionResponse> {
   const response = await fetch(`${apiBaseUrl}/api/bookings`, {
     body: JSON.stringify(payload),

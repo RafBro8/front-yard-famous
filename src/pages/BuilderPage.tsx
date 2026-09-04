@@ -1,5 +1,6 @@
 import { PointerEvent, RefObject, useMemo, useRef, useState } from 'react';
 import { builderPieces, initialBuilderLayout } from '../data/builderContent';
+import { saveBuilderLayout } from '../lib/builderLayoutStorage';
 import type { BuilderCanvasPiece, BuilderPieceShape, BuilderPieceTemplate } from '../types/business';
 
 type DragState = {
@@ -127,6 +128,11 @@ function BuilderPage() {
     setSelectedId(initialBuilderLayout[0]?.instanceId || '');
   }
 
+  function useLayoutInBooking() {
+    saveBuilderLayout(layout);
+    window.location.href = '/booking';
+  }
+
   return (
     <section className="bg-linen">
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.36fr_0.64fr] lg:items-start">
@@ -136,6 +142,7 @@ function BuilderPage() {
           onArrange={applyArrangement}
           onRemoveSelected={removeSelectedPiece}
           onReset={resetLayout}
+          onUseLayoutInBooking={useLayoutInBooking}
           onUpdateSelected={updateSelectedPiece}
           selectedPiece={selectedPiece}
         />
@@ -158,6 +165,7 @@ function BuilderSidebar({
   onArrange,
   onRemoveSelected,
   onReset,
+  onUseLayoutInBooking,
   onUpdateSelected,
   selectedPiece,
 }: {
@@ -166,6 +174,7 @@ function BuilderSidebar({
   onArrange: (preset: ArrangementPreset) => void;
   onRemoveSelected: () => void;
   onReset: () => void;
+  onUseLayoutInBooking: () => void;
   onUpdateSelected: (updates: Partial<Pick<BuilderCanvasPiece, 'rotation' | 'scale'>>) => void;
   selectedPiece: BuilderCanvasPiece | null;
 }) {
@@ -177,8 +186,8 @@ function BuilderSidebar({
           Sketch a yard setup with sample inventory.
         </h1>
         <p className="mt-4 leading-7 text-ink/68">
-          Add pieces, drag them around the yard, try quick arrangements, and reset the
-          display before this connects to booking requests later.
+          Add pieces, drag them around the yard, try quick arrangements, and send the
+          layout into the booking request when the concept feels right.
         </p>
       </div>
 
@@ -267,9 +276,16 @@ function BuilderSidebar({
       <section className="border border-ink/10 bg-forest p-5 text-white">
         <h2 className="font-display text-2xl font-semibold">Layout summary</h2>
         <p className="mt-3 text-sm leading-6 text-white/68">
-          {layout.length} pieces on canvas. The next stage can attach this layout JSON
-          to a booking request.
+          {layout.length} pieces on canvas. Save the current setup to include the layout
+          summary with the booking request.
         </p>
+        <button
+          className="mt-5 w-full bg-butter px-4 py-3 text-sm font-semibold text-forest transition hover:bg-white"
+          onClick={onUseLayoutInBooking}
+          type="button"
+        >
+          Use this layout in booking
+        </button>
       </section>
     </aside>
   );

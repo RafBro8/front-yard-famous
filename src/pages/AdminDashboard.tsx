@@ -5,6 +5,7 @@ import type {
   AdminDashboardData,
   BookingRecord,
   BookingStatus,
+  BuilderBookingLayout,
   InventoryAvailabilityItem,
 } from '../types/business';
 
@@ -301,6 +302,7 @@ function BookingRequestRow({
         <p className="mt-4 text-sm leading-6 text-ink/58">
           {request.themeNotes || 'No theme notes added.'}
         </p>
+        <BuilderLayoutAdminPreview layout={request.builderLayout} />
       </div>
 
       <div className="border-l-0 border-ink/10 text-sm xl:border-l xl:pl-5">
@@ -328,6 +330,32 @@ function BookingRequestRow({
   );
 }
 
+function BuilderLayoutAdminPreview({ layout }: { layout?: BuilderBookingLayout | null }) {
+  if (!layout) {
+    return null;
+  }
+
+  return (
+    <div className="mt-5 border border-lawn/18 bg-mint p-4">
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
+        <div>
+          <p className="text-sm font-semibold text-lawn">Builder concept</p>
+          <p className="mt-1 text-sm leading-6 text-ink/68">{layout.summary}</p>
+        </div>
+        <span className="bg-white px-3 py-1 text-xs font-semibold text-forest">
+          {layout.pieces.length} pieces
+        </span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {layout.pieces.slice(0, 10).map((piece) => (
+          <span key={piece.instanceId} className="border border-white/70 bg-white/80 px-2 py-1 text-xs font-semibold text-ink/62">
+            {piece.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 function StatusBadge({ status }: { status: BookingStatus }) {
   return (
     <span className={`border px-3 py-1 text-xs font-semibold ${statusClasses[status]}`}>

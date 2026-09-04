@@ -103,6 +103,7 @@ export type BookingSubmissionResponse = {
 };
 
 export type BookingRecord = BookingFormState & {
+  builderLayout?: BuilderBookingLayout | null;
   id: string;
   status: BookingStatus;
   createdAt: string;
@@ -151,6 +152,17 @@ export type BuilderCanvasPiece = BuilderPieceTemplate & {
   y: number;
   rotation: number;
   scale: number;
+};
+
+export type BuilderBookingLayout = {
+  version: 1;
+  createdAt: string;
+  summary: string;
+  pieces: BuilderCanvasPiece[];
+};
+
+export type BookingRequestPayload = BookingFormState & {
+  builderLayout?: BuilderBookingLayout | null;
 };
 
 export type AdminMetric = {

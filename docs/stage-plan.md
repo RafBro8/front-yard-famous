@@ -273,10 +273,11 @@ Commit checkpoint:
 Goal: attach customer layouts to booking requests.
 
 Build:
-- Save layout JSON in frontend state.
+- Save layout JSON in session storage from `/builder`.
 - Attach layout summary to booking request payload.
 - Store builder layout through the API.
 - Show submitted layout details in admin.
+- Add API validation and route tests for builder layouts.
 
 Commit checkpoint:
 - `feat: attach builder layouts to bookings`

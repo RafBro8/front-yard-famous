@@ -6,6 +6,27 @@ import { after, before, describe, it } from 'node:test';
 import { createApiServer } from '../../server/index.js';
 import { createBookingStore } from '../../server/bookingStore.js';
 
+const validBuilderLayout = {
+  version: 1,
+  createdAt: '2026-08-27T14:18:00.000Z',
+  summary: '3 pieces: 2 letters, 1 number.',
+  pieces: [
+    {
+      id: 'happy',
+      instanceId: 'layout-happy',
+      label: 'HAPPY',
+      category: 'letter',
+      color: '#123526',
+      textColor: '#fffdf8',
+      shape: 'rectangle',
+      x: 18,
+      y: 30,
+      rotation: -3,
+      scale: 1,
+    },
+  ],
+};
+
 const validPayload = {
   name: 'Avery Chen',
   email: 'avery@example.com',
@@ -116,6 +137,32 @@ describe('Front Yard Famous API', () => {
     assert.equal(list.bookings.length, 1);
     assert.equal(list.bookings[0].email, 'avery@example.com');
     assert.equal(list.bookings[0].displayMessage, 'Welcome Home Baby Noah');
+  });
+  it('creates booking requests with builder layouts', async () => {
+    const createResponse = await fetch(`${baseUrl}/api/bookings`, {
+      body: JSON.stringify({
+        ...validPayload,
+        email: 'builder@example.com',
+        displayMessage: 'Happy 30th Jordan',
+        builderLayout: validBuilderLayout,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    const created = await createResponse.json();
+
+    assert.equal(createResponse.status, 201);
+    assert.equal(created.status, 'new');
+
+    const listResponse = await fetch(`${baseUrl}/api/bookings`);
+    const list = await listResponse.json();
+    const builderBooking = list.bookings.find((booking) => booking.email === 'builder@example.com');
+
+    assert.equal(builderBooking.displayMessage, 'Happy 30th Jordan');
+    assert.equal(builderBooking.builderLayout.summary, '3 pieces: 2 letters, 1 number.');
+    assert.equal(builderBooking.builderLayout.pieces[0].label, 'HAPPY');
   });
 
   it('updates booking request status', async () => {
