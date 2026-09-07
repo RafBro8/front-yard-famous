@@ -1,6 +1,6 @@
-# Front Yard Famous Demo Guide
+# Big Day Yard Co. Demo Guide
 
-Front Yard Famous is currently framed as a portfolio-ready product demo for a local yard sign, stork, and celebration display business.
+Big Day Yard Co. is currently framed as a portfolio-ready product demo for a local yard sign, stork, and celebration display business.
 
 ## Run the Demo
 

@@ -1,6 +1,6 @@
 import type { BuilderBookingLayout, BuilderCanvasPiece } from '../types/business';
 
-const builderLayoutStorageKey = 'front-yard-famous.builder-layout';
+const builderLayoutStorageKey = 'big-day-yard-co.builder-layout';
 const validShapes = new Set(['rectangle', 'circle', 'star', 'stork', 'cap']);
 const validCategories = new Set(['letter', 'number', 'theme', 'baby', 'graduation', 'filler']);
 

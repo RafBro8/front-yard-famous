@@ -55,11 +55,11 @@ export function createBookingStore(filePath) {
       const createdAt = new Date().toISOString();
       const nextNumber =
         source
-          .map((booking) => Number.parseInt(String(booking.id).replace('FYF-', ''), 10))
+          .map((booking) => Number.parseInt(String(booking.id).replace('BDY-', ''), 10))
           .filter(Number.isFinite)
           .sort((left, right) => right - left)[0] || 1000;
       const booking = {
-        id: `FYF-${String(nextNumber + 1).padStart(4, '0')}`,
+        id: `BDY-${String(nextNumber + 1).padStart(4, '0')}`,
         status: 'new',
         createdAt,
         updatedAt: createdAt,

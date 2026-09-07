@@ -32,5 +32,5 @@ function getErrorMessage(data: unknown) {
     return data.error;
   }
 
-  return 'The request could not be sent. Please try again or contact Front Yard Famous directly.';
+  return 'The request could not be sent. Please try again or contact Big Day Yard Co. directly.';
 }

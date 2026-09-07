@@ -1,12 +1,12 @@
-# Front Yard Famous
+# Big Day Yard Co.
 
-Modern booking and showcase website for Front Yard Famous, a yard greeting and celebration display business.
+Modern booking and showcase website for Big Day Yard Co., a yard greeting and celebration display business.
 
 ## Stage
 
-Current stage: **Stage 11C builder polish**
+Current stage: **Stage 12A demo rebrand and deployment prep**
 
-The current milestone polishes the yard display builder with categorized inventory controls, reusable visual yard previews, SVG preview export, and a richer admin layout preview.
+The current milestone rebrands the public demo as Big Day Yard Co. and prepares a Vercel frontend plus Render API deployment path without a database.
 
 ## Tech Stack
 
@@ -100,7 +100,7 @@ Default local booking requests are stored in `.data/booking-requests.json`, whic
 
 ## Product Direction
 
-Front Yard Famous should feel modern, joyful, polished, and uncluttered. The website should avoid the crammed one-page style common in local yard sign businesses and instead make booking, pricing, gallery browsing, and occasion discovery easy to scan.
+Big Day Yard Co. should feel modern, joyful, polished, and uncluttered. The website should avoid the crammed one-page style common in local yard sign businesses and instead make booking, pricing, gallery browsing, and occasion discovery easy to scan.
 
 ## Data Model Direction
 
@@ -109,7 +109,7 @@ The current site content lives in typed frontend data files:
 - `src/types/business.ts` defines business-facing TypeScript models.
 - `src/data/siteContent.ts` stores occasions, packages, add-ons, inventory examples, availability rules, FAQs, and booking defaults.
 
-These frontend models are intentionally shaped so they can later map to MongoDB documents or API responses without redesigning the whole site.
+These frontend models are intentionally shaped so they can later map to persisted API responses without redesigning the whole site.
 
 ## Admin Direction
 
@@ -124,7 +124,7 @@ Stage 6 adds a built-in Node HTTP API with these starter endpoints:
 - `POST /api/bookings`
 - `GET /api/inventory`
 
-The current persistence layer uses local JSON so the booking workflow can be tested immediately. Mongo Atlas remains the intended production persistence option once backend dependencies and deployment details are added.
+The current persistence layer uses local JSON so the booking workflow can be tested immediately. For the public portfolio demo, the API can run on Render with temporary JSON storage and seeded demo bookings. Data may reset when the Render service restarts, which is acceptable for showcase use but not for a real booking business.
 
 ## Testing Direction
 
@@ -153,7 +153,19 @@ Stage 7.5 keeps the homepage light and moves deeper customer content into focuse
 
 ## Launch Direction
 
-Stage 8 adds route-specific metadata, social preview tags, favicon/manifest files, robots and sitemap files, and a Vercel rewrite so direct refreshes on public routes work in production. The sitemap and social URLs currently use `https://fyf.com` as the planned production domain placeholder.
+Stage 8 adds route-specific metadata, social preview tags, favicon/manifest files, robots and sitemap files, and a Vercel rewrite so direct refreshes on public routes work in production. The sitemap and social URLs currently use `https://big-day-yard-co-demo.vercel.app` as the planned production domain placeholder.
+
+## Demo Deployment
+
+Recommended showcase setup:
+
+- Vercel project: `big-day-yard-co-demo`
+- Render service: `big-day-yard-co-api`
+- Vercel environment variable: `VITE_API_BASE_URL=https://big-day-yard-co-api.onrender.com`
+- Render environment variable: `CLIENT_ORIGIN=https://big-day-yard-co-demo.vercel.app`
+- Render environment variable: `HOST=0.0.0.0`
+
+The API intentionally uses local JSON for this demo. It demonstrates booking submission, admin review, status updates, inventory availability, and builder-layout persistence without requiring a database.
 
 Launch checklist:
 
@@ -168,7 +180,7 @@ Demo documentation:
 
 ## Portfolio Case Study
 
-Front Yard Famous can be treated as a polished portfolio product instead of an active business launch.
+Big Day Yard Co. can be treated as a polished portfolio product instead of an active business launch.
 
 Problem:
 

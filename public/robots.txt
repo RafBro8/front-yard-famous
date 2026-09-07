@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://fyf.com/sitemap.xml
+Sitemap: https://big-day-yard-co-demo.vercel.app/sitemap.xml

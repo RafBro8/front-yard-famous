@@ -26,11 +26,11 @@ This project can be adapted for other local booking businesses that need a polis
 - Use Vercel for the Vite frontend.
 - Keep the API local for a portfolio demo, or deploy it to Render for a full-stack demo.
 - Set `VITE_API_BASE_URL` if the frontend and API are hosted on different origins.
-- Replace `https://fyf.com` in metadata, sitemap, robots, and docs when the final domain is chosen.
+- Replace `https://big-day-yard-co-demo.vercel.app` in metadata, sitemap, robots, and docs when the final domain is chosen.
 
 ## Production Upgrade Path
 
-- Replace local JSON persistence with MongoDB Atlas.
+- Replace local JSON persistence with a real database before accepting live customer requests.
 - Add admin authentication before exposing real customer requests.
 - Add email notifications for new booking requests.
 - Add Stripe only when payment workflow is part of the product goal.

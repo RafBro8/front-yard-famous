@@ -1,15 +1,15 @@
-# Front Yard Famous Deployment Checklist
+# Big Day Yard Co. Deployment Checklist
 
-## Domain
+## Demo Domain
 
-- Confirm the production domain before launch.
-- Replace `https://fyf.com` in metadata, sitemap, robots, and docs if the final domain changes.
-- Decide whether the site should use the apex domain, `www`, or both.
+- Use a demo-safe Vercel project name such as `big-day-yard-co-demo`.
+- Keep protected real business domains and names out of the public demo.
+- Replace `https://big-day-yard-co-demo.vercel.app` in metadata, sitemap, robots, and docs if the demo URL changes.
 
 ## Frontend
 
 - Deploy the Vite frontend to Vercel.
-- Set `VITE_API_BASE_URL` to the production API origin when the backend is hosted separately.
+- Set `VITE_API_BASE_URL` to the Render API origin, for example `https://big-day-yard-co-api.onrender.com`.
 - Confirm direct refreshes work for:
   - `/`
   - `/occasions`
@@ -22,18 +22,20 @@
 
 ## Backend
 
-- Deploy the Node API to Render or another backend host.
-- Set `PORT` according to the host platform.
-- Set `CLIENT_ORIGIN` to the production frontend origin.
+- Deploy the Node API to Render.
+- Use `npm run start:api` as the Render start command.
+- Set `HOST=0.0.0.0` so Render can route traffic to the service.
+- Set `CLIENT_ORIGIN` to the Vercel demo origin.
 - Keep `.data` local storage for development only.
-- Move production bookings to Mongo Atlas before accepting real customer requests at scale.
+- Use `/tmp/big-day-yard-co-bookings.json` for Render demo storage.
+- Expect demo bookings/status changes to reset when the Render service restarts.
 
 ## Metadata
 
 - Confirm each route has the expected page title and description.
 - Confirm social previews use the final production URL.
 - Confirm the social preview image is crisp and representative of the business.
-- Submit the sitemap after the final domain is live.
+- Submit the sitemap only if the demo becomes a public indexed site.
 
 ## Booking Flow
 

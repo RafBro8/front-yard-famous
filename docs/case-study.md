@@ -1,8 +1,8 @@
-# Front Yard Famous Case Study
+# Big Day Yard Co. Case Study
 
 ## Overview
 
-Front Yard Famous is a modern booking and operations demo for a local celebration display business. It presents yard greetings, storks, milestone numbers, and themed display setups through a cleaner product experience than the crowded one-page sites common in the category.
+Big Day Yard Co. is a modern booking and operations demo for a local celebration display business. It presents yard greetings, storks, milestone numbers, and themed display setups through a cleaner product experience than the crowded one-page sites common in the category.
 
 ## Problem
 

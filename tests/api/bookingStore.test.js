@@ -7,7 +7,7 @@ import { createBookingStore } from '../../server/bookingStore.js';
 
 const seededBookings = [
   {
-    id: 'FYF-1024',
+    id: 'BDY-1024',
     status: 'new',
     createdAt: '2026-08-27T14:20:00.000Z',
     updatedAt: '2026-08-27T14:20:00.000Z',
@@ -42,7 +42,7 @@ describe('createBookingStore', () => {
   let store;
 
   before(async () => {
-    tempDirectory = await mkdtemp(path.join(tmpdir(), 'fyf-store-test-'));
+    tempDirectory = await mkdtemp(path.join(tmpdir(), 'bdy-store-test-'));
     store = createBookingStore(path.join(tempDirectory, 'bookings.json')).seed(seededBookings);
   });
 
@@ -54,13 +54,13 @@ describe('createBookingStore', () => {
     const bookings = await store.list();
 
     assert.equal(bookings.length, 1);
-    assert.equal(bookings[0].id, 'FYF-1024');
+    assert.equal(bookings[0].id, 'BDY-1024');
   });
 
   it('creates bookings after the highest seeded id', async () => {
     const booking = await store.create(bookingPayload);
 
-    assert.equal(booking.id, 'FYF-1025');
+    assert.equal(booking.id, 'BDY-1025');
     assert.equal(booking.status, 'new');
 
     const bookings = await store.list();
@@ -68,9 +68,9 @@ describe('createBookingStore', () => {
   });
 
   it('updates seeded or persisted booking status', async () => {
-    const booking = await store.updateStatus('FYF-1024', 'confirmed');
+    const booking = await store.updateStatus('BDY-1024', 'confirmed');
 
-    assert.equal(booking.id, 'FYF-1024');
+    assert.equal(booking.id, 'BDY-1024');
     assert.equal(booking.status, 'confirmed');
   });
 });

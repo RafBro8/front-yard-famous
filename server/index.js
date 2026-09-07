@@ -27,7 +27,7 @@ export function createApiServer({
       if (request.method === 'GET' && url.pathname === '/api/health') {
         sendJson(response, 200, {
           ok: true,
-          service: 'front-yard-famous-api',
+          service: 'big-day-yard-co-api',
           storage,
         });
         return;
@@ -121,11 +121,11 @@ export function createApiServer({
   });
 }
 
-export function startApiServer({ port = config.port, host = '127.0.0.1' } = {}) {
+export function startApiServer({ port = config.port, host = config.host } = {}) {
   const server = createApiServer();
 
   server.listen(port, host, () => {
-    console.log(`Front Yard Famous API running at http://${host}:${port}`);
+    console.log(`Big Day Yard Co. API running at http://${host}:${port}`);
   });
 
   return server;
@@ -138,7 +138,7 @@ if (isMainModule()) {
 function setCorsHeaders(request, response) {
   const origin = request.headers.origin;
   const allowedOrigins = new Set([
-    config.clientOrigin,
+    ...config.clientOrigins,
     'http://127.0.0.1:5173',
     'http://localhost:5173',
   ]);

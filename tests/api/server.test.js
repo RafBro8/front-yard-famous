@@ -40,13 +40,13 @@ const validPayload = {
   themeNotes: 'Soft greens and stars',
 };
 
-describe('Front Yard Famous API', () => {
+describe('Big Day Yard Co. API', () => {
   let baseUrl;
   let server;
   let tempDirectory;
 
   before(async () => {
-    tempDirectory = await mkdtemp(path.join(tmpdir(), 'fyf-api-test-'));
+    tempDirectory = await mkdtemp(path.join(tmpdir(), 'bdy-api-test-'));
     const bookingStore = createBookingStore(path.join(tempDirectory, 'bookings.json'));
     server = createApiServer({ bookingStore, storage: 'test-json' });
 
@@ -80,7 +80,7 @@ describe('Front Yard Famous API', () => {
     assert.equal(response.status, 200);
     assert.deepEqual(body, {
       ok: true,
-      service: 'front-yard-famous-api',
+      service: 'big-day-yard-co-api',
       storage: 'test-json',
     });
   });
@@ -127,7 +127,7 @@ describe('Front Yard Famous API', () => {
     const created = await createResponse.json();
 
     assert.equal(createResponse.status, 201);
-    assert.equal(created.id, 'FYF-1001');
+    assert.equal(created.id, 'BDY-1001');
     assert.equal(created.status, 'new');
 
     const listResponse = await fetch(`${baseUrl}/api/bookings`);
@@ -195,7 +195,7 @@ describe('Front Yard Famous API', () => {
   });
 
   it('rejects invalid booking status updates', async () => {
-    const response = await fetch(`${baseUrl}/api/bookings/FYF-9999/status`, {
+    const response = await fetch(`${baseUrl}/api/bookings/BDY-9999/status`, {
       body: JSON.stringify({ status: 'maybe' }),
       headers: {
         'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ describe('Front Yard Famous API', () => {
   });
 
   it('returns not found when a valid status targets a missing booking', async () => {
-    const response = await fetch(`${baseUrl}/api/bookings/FYF-9999/status`, {
+    const response = await fetch(`${baseUrl}/api/bookings/BDY-9999/status`, {
       body: JSON.stringify({ status: 'confirmed' }),
       headers: {
         'Content-Type': 'application/json',

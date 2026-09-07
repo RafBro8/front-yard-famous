@@ -12,7 +12,7 @@ export function downloadBuilderPreview(layout: BuilderCanvasPiece[]) {
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = `front-yard-famous-builder-${Date.now()}.svg`;
+  link.download = `big-day-yard-co-builder-${Date.now()}.svg`;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -25,7 +25,7 @@ export function createBuilderPreviewSvg(layout: BuilderCanvasPiece[]) {
   const pieces = layout.map(renderPieceSvg).join('');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${previewWidth}" height="${previewHeight}" viewBox="0 0 ${previewWidth} ${previewHeight}" role="img" aria-label="Front Yard Famous yard display preview">
+<svg xmlns="http://www.w3.org/2000/svg" width="${previewWidth}" height="${previewHeight}" viewBox="0 0 ${previewWidth} ${previewHeight}" role="img" aria-label="Big Day Yard Co. yard display preview">
   <rect width="1200" height="800" fill="#fff8ec"/>
   <rect x="90" y="84" width="1020" height="290" fill="#dff4e8" stroke="#17211b" stroke-opacity="0.08"/>
   <rect x="0" y="368" width="1200" height="432" fill="#4f9a68"/>

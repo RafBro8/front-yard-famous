@@ -43,4 +43,4 @@ Stage 10.5 checked the customer homepage, booking page, and admin dashboard at d
 
 - Add Playwright screenshots to automated tests when browser test dependencies are introduced.
 - Add final hosted URLs after deployment.
-- Replace placeholder domain references if `fyf.com` is not the final demo URL.
+- Replace placeholder domain references if `big-day-yard-co-demo.vercel.app` is not the final demo URL.

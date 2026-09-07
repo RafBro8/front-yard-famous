@@ -31,7 +31,12 @@ if (existsSync(envPath)) {
 
 export const config = {
   port: Number(process.env.PORT || 4000),
+  host: process.env.HOST || '127.0.0.1',
   clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  clientOrigins: (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   bookingsDataFile: path.resolve(
     process.cwd(),
     process.env.BOOKINGS_DATA_FILE || '.data/booking-requests.json',

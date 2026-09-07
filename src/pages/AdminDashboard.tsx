@@ -170,7 +170,7 @@ function AdminHeader() {
     <header className="border-b border-ink/10 bg-linen">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-5 sm:px-8 md:flex-row md:items-center md:justify-between">
         <a className="font-display text-2xl font-semibold text-forest" href="/admin">
-          Front Yard Famous Admin
+          Big Day Yard Co. Admin
         </a>
         <nav className="flex flex-wrap gap-3 text-sm font-semibold" aria-label="Admin navigation">
           <a

@@ -1,4 +1,4 @@
-# Front Yard Famous Stage Plan
+# Big Day Yard Co. Stage Plan
 
 ## Working Agreement
 
@@ -95,7 +95,7 @@ Build:
 - Inventory priority panel using the shared business data model.
 - Package/pricing management preview.
 - Blackout date planning panel for unavailable dates.
-- Frontend-only structure that can later connect to auth, MongoDB, and API routes.
+- Frontend-only structure that can later connect to auth and API routes.
 
 Commit checkpoint:
 - `feat: add admin booking management`
@@ -106,9 +106,8 @@ Goal: add durable booking and inventory data.
 
 Possible stack:
 - Node/Express.
-- MongoDB Atlas.
 - Vercel frontend.
-- Render or serverless API hosting.
+- Render API hosting.
 
 Build:
 - Lightweight Node API without external backend packages for the first persistence pass.
@@ -117,11 +116,11 @@ Build:
 - `GET /api/inventory` for future inventory-backed admin screens.
 - Local JSON persistence in `.data/booking-requests.json`.
 - Vite proxy from `/api` to the local API during development.
-- Environment example for API port, client origin, local data file, and future Mongo URI.
+- Environment example for API port, host binding, client origin, and local data file.
 
 Next backend pass:
 - Add Express once npm registry access is reliable in the working environment.
-- Add MongoDB Atlas persistence behind the same booking store interface.
+- Add a real database behind the same booking store interface only if the demo becomes a production app.
 - Add admin-only auth before exposing real booking management publicly.
 
 Commit checkpoint:
@@ -297,7 +296,36 @@ Build:
 Commit checkpoint:
 - `feat: polish yard display builder`
 
-## Stage 12: Payments and Customer Accounts
+## Stage 12A: Demo Rebrand and Deployment Prep
+
+Goal: protect the real business brand while preparing a public portfolio demo.
+
+Build:
+- Rebrand the public demo from the protected business name to Big Day Yard Co.
+- Update metadata, manifest, favicon label, sitemap, robots file, README, and demo docs.
+- Prepare Vercel frontend settings for `big-day-yard-co-demo`.
+- Prepare Render API settings for `big-day-yard-co-api`.
+- Keep local JSON persistence for the hosted demo instead of adding a database.
+- Document that hosted demo bookings may reset when the Render service restarts.
+
+Commit checkpoint:
+- `chore: prepare demo rebrand deployment`
+
+## Stage 12B: Hosted Demo Deployment
+
+Goal: make the portfolio demo clickable with a hosted frontend and hosted demo API.
+
+Build:
+- Deploy the Node API to Render.
+- Set Render environment variables for `HOST`, `CLIENT_ORIGIN`, and `BOOKINGS_DATA_FILE`.
+- Deploy the Vite frontend to Vercel.
+- Set Vercel `VITE_API_BASE_URL` to the Render API origin.
+- Smoke test `/`, `/builder`, `/booking`, `/admin`, and `/api/health` after deployment.
+
+Commit checkpoint:
+- `docs: document hosted demo deployment`
+
+## Stage 13: Payments and Customer Accounts
 
 Goal: add payment and accounts only if the project shifts back toward a real business workflow.
 

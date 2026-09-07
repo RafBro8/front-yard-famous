@@ -1,6 +1,6 @@
 export const demoBookings = [
   {
-    id: 'FYF-1024',
+    id: 'BDY-1024',
     status: 'new',
     createdAt: '2026-08-27T14:20:00.000Z',
     updatedAt: '2026-08-27T14:20:00.000Z',
@@ -61,7 +61,7 @@ export const demoBookings = [
       ],
     },  },
   {
-    id: 'FYF-1023',
+    id: 'BDY-1023',
     status: 'reviewing',
     createdAt: '2026-08-26T19:42:00.000Z',
     updatedAt: '2026-08-27T09:15:00.000Z',
@@ -77,7 +77,7 @@ export const demoBookings = [
     themeNotes: 'Soft greens, cream, and simple baby icons.',
   },
   {
-    id: 'FYF-1022',
+    id: 'BDY-1022',
     status: 'confirmed',
     createdAt: '2026-08-24T16:30:00.000Z',
     updatedAt: '2026-08-25T12:10:00.000Z',
@@ -93,7 +93,7 @@ export const demoBookings = [
     themeNotes: 'Blue and silver school colors with class year numbers.',
   },
   {
-    id: 'FYF-1021',
+    id: 'BDY-1021',
     status: 'completed',
     createdAt: '2026-08-12T10:05:00.000Z',
     updatedAt: '2026-08-22T20:40:00.000Z',

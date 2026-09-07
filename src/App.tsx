@@ -35,57 +35,57 @@ const publicPaths = new Set<PublicPath>([
   '/booking',
   '/faq',
 ]);
-const siteUrl = 'https://fyf.com';
+const siteUrl = 'https://big-day-yard-co-demo.vercel.app';
 const socialImagePath = '/images/hero-birthday-display.png';
 
 const publicPageMetadata: Record<PublicPath, PageMetadataDefinition> = {
   '/': {
-    title: 'Front Yard Famous | Modern Yard Greetings',
+    title: 'Big Day Yard Co. | Modern Yard Greetings',
     description:
       'Stylish yard sign setups for birthdays, new babies, graduations, anniversaries, retirements, and custom celebrations.',
     path: '/',
   },
   '/occasions': {
-    title: 'Occasions | Front Yard Famous',
+    title: 'Occasions | Big Day Yard Co.',
     description:
-      'Browse Front Yard Famous yard greeting options for birthdays, new babies, graduations, anniversaries, retirements, and custom celebrations.',
+      'Browse Big Day Yard Co. yard greeting options for birthdays, new babies, graduations, anniversaries, retirements, and custom celebrations.',
     path: '/occasions',
   },
   '/gallery': {
-    title: 'Gallery | Front Yard Famous',
+    title: 'Gallery | Big Day Yard Co.',
     description:
-      'Explore modern yard sign display ideas, milestone numbers, storks, graduation setups, and celebration themes from Front Yard Famous.',
+      'Explore modern yard sign display ideas, milestone numbers, storks, graduation setups, and celebration themes from Big Day Yard Co..',
     path: '/gallery',
   },
   '/pricing': {
-    title: 'Pricing | Front Yard Famous',
+    title: 'Pricing | Big Day Yard Co.',
     description:
-      'Review simple starting packages and custom yard sign setup options from Front Yard Famous.',
+      'Review simple starting packages and custom yard sign setup options from Big Day Yard Co..',
     path: '/pricing',
   },
   '/builder': {
-    title: 'Yard Display Builder | Front Yard Famous',
+    title: 'Yard Display Builder | Big Day Yard Co.',
     description:
-      'Prototype a Front Yard Famous yard display by arranging sample letters, numbers, icons, and fillers on a yard canvas.',
+      'Prototype a Big Day Yard Co. yard display by arranging sample letters, numbers, icons, and fillers on a yard canvas.',
     path: '/builder',
   },
   '/booking': {
-    title: 'Request a Date | Front Yard Famous',
+    title: 'Request a Date | Big Day Yard Co.',
     description:
-      'Request a Front Yard Famous yard sign setup date and share celebration details for manual availability review.',
+      'Request a Big Day Yard Co. yard sign setup date and share celebration details for manual availability review.',
     path: '/booking',
   },
   '/faq': {
-    title: 'FAQ and Service Area | Front Yard Famous',
+    title: 'FAQ and Service Area | Big Day Yard Co.',
     description:
-      'Find answers about Front Yard Famous setup timing, booking confirmation, service area review, weather, and custom yard greeting requests.',
+      'Find answers about Big Day Yard Co. setup timing, booking confirmation, service area review, weather, and custom yard greeting requests.',
     path: '/faq',
   },
 };
 
 const adminPageMetadata: PageMetadataDefinition = {
-  title: 'Admin | Front Yard Famous',
-  description: 'Private Front Yard Famous booking and inventory management area.',
+  title: 'Admin | Big Day Yard Co.',
+  description: 'Private Big Day Yard Co. booking and inventory management area.',
   path: '/admin',
   robots: 'noindex,nofollow',
 };
@@ -269,7 +269,7 @@ function Header({ currentPath }: HeaderProps) {
     <header className="border-b border-ink/10 bg-cream/95">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
         <a className="font-display text-2xl font-semibold text-forest" href="/">
-          Front Yard Famous
+          Big Day Yard Co.
         </a>
         <nav aria-label="Main navigation" className="flex w-full gap-2 overflow-x-auto text-sm font-semibold lg:w-auto lg:items-center lg:gap-3">
           {navItems.map((item) => (
@@ -305,7 +305,7 @@ function Hero() {
           Modern yard greetings
         </p>
         <h1 className="mt-5 max-w-3xl font-display text-5xl font-semibold leading-[1.02] text-forest sm:text-6xl">
-          Make their big day Front Yard Famous.
+          Make their big day Big Day Yard Co..
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-8 text-ink/70">
           Stylish yard sign setups for birthdays, new babies, graduations,
@@ -528,7 +528,7 @@ function ServiceAreaSection() {
             Local setup coverage, confirmed before booking.
           </h1>
           <p className="mt-5 leading-7 text-ink/68">
-            Front Yard Famous can start with a practical service-area review instead of
+            Big Day Yard Co. can start with a practical service-area review instead of
             promising instant availability across every neighborhood.
           </p>
         </div>
@@ -978,7 +978,7 @@ function ContactSection() {
         </div>
         <a
           className="rounded-full bg-forest px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-lawn"
-          href="mailto:hello@frontyardfamous.com?subject=Front%20Yard%20Famous%20booking%20request"
+          href="mailto:hello@bigdayyardco.example?subject=Big%20Day%20Yard%20Co%20booking%20request"
         >
           Email placeholder
         </a>
@@ -1176,7 +1176,7 @@ function Footer() {
   return (
     <footer className="border-t border-ink/10 bg-cream">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-sm text-ink/62 sm:px-8 md:flex-row md:items-center md:justify-between">
-        <p className="font-semibold text-forest">Front Yard Famous</p>
+        <p className="font-semibold text-forest">Big Day Yard Co.</p>
         <p>Yard greetings, storks, milestone numbers, and custom celebration displays.</p>
       </div>
     </footer>

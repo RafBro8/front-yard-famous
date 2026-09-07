@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: big-day-yard-co-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start:api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: BOOKINGS_DATA_FILE
+        value: /tmp/big-day-yard-co-bookings.json
