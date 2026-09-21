@@ -1176,8 +1176,27 @@ function Footer() {
   return (
     <footer className="border-t border-ink/10 bg-cream">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-sm text-ink/62 sm:px-8 md:flex-row md:items-center md:justify-between">
-        <p className="font-semibold text-forest">Big Day Yard Co.</p>
-        <p>Yard greetings, storks, milestone numbers, and custom celebration displays.</p>
+        <div>
+          <p className="font-semibold text-forest">Big Day Yard Co.</p>
+          <p className="mt-1">Yard greetings, storks, milestone numbers, and custom celebration displays.</p>
+        </div>
+        <div className="flex flex-col gap-1 md:items-end md:text-right">
+          {/* Said plainly and first. This company does not exist, and the
+              booking form asks for a name, an email and a phone number —
+              somebody could fill it in expecting a display on their lawn. */}
+          <p className="font-semibold text-ink/75">Demo site. Big Day Yard Co. is not a real company.</p>
+          <p>
+            Designed &amp; Built by{' '}
+            <a
+              href="https://goodlookingdigital.com"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-forest underline-offset-2 transition-opacity hover:underline hover:opacity-80"
+            >
+              Good Looking Digital
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
