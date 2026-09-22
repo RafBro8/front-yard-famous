@@ -1182,7 +1182,7 @@ function Footer() {
         </div>
         <div className="flex flex-col gap-1 md:items-end md:text-right">
           {/* Said plainly and first. This company does not exist, and the
-              booking form asks for a name, an email and a phone number —
+              booking form asks for a name, an email and a phone number -
               somebody could fill it in expecting a display on their lawn. */}
           <p className="font-semibold text-ink/75">Demo site. Big Day Yard Co. is not a real company.</p>
           <p>
