@@ -15,6 +15,18 @@ export const heroImage = {
   alt: 'Premium happy birthday yard display with large letters, milestone numbers, and graphic accents',
 };
 
+/**
+ * A second setup, for the gallery.
+ *
+ * The hero and the gallery preview sit on the same page, and both used to show
+ * the same birthday display, which made a business built on variety look like
+ * it owned one sign.
+ */
+export const galleryImage = {
+  src: '/images/hero-yard-display.png',
+  alt: 'New baby yard display with milestone numbers, a balloon arch, a stork and pastel accents',
+};
+
 export const navItems: NavItem[] = [
   { label: 'Occasions', href: '/occasions' },
   { label: 'Gallery', href: '/gallery' },
