@@ -306,7 +306,7 @@ function Hero() {
           Modern yard greetings
         </p>
         <h1 className="mt-5 max-w-3xl font-display text-5xl font-semibold leading-[1.02] text-forest sm:text-6xl">
-          Make their big day famous on the front lawn.
+          Make their big day Front Yard Famous.
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-8 text-ink/70">
           Stylish yard sign setups for birthdays, new babies, graduations,
